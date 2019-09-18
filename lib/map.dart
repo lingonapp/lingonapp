@@ -1,6 +1,9 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -10,7 +13,10 @@ class MapPage extends StatefulWidget {
 }
 
 class MapState extends State<MapPage> {
+  Geoflutterfire geo = Geoflutterfire();
+  final Firestore _firestore = Firestore.instance;
   final Completer<GoogleMapController> _controller = Completer();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   static const CameraPosition headQuarters = CameraPosition(
     target: LatLng(59.3225207,18.0443221),
@@ -61,18 +67,38 @@ class MapState extends State<MapPage> {
 
   Future<void> _trackPosition() async {
     await _refreshLocationPermission();
-    print('status' + geolocationStatus.toString());
     if(geolocationStatus == GeolocationStatus.denied) {
       return;
     }
     final LocationOptions locationOptions =
     LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 25);
 
-    geolocator.getPositionStream(locationOptions).listen((Position position) {
-      print(position == null
-          ? 'Unknown'
-          : position.latitude.toString() + ', ' + position.longitude.toString());
+    geolocator.getPositionStream(locationOptions).listen((Position position) async {
+      if (position == null) {
+        return;
+      }
+      await _saveToDB(position);
     });
+  }
+
+  Future<void> _saveToDB(Position position) async {
+    try {
+      final GeoFirePoint myLocation = geo.point(
+          latitude: position.latitude, longitude: position.longitude);
+      final Map<String, dynamic> dataMap = <String, dynamic>{
+        'name': 'me',
+        'position': myLocation.data,
+      };
+      final FirebaseUser user = await _auth.currentUser();
+      final String userID = await user.getIdToken();
+      _firestore
+          .collection('locations')
+          .document(userID)
+          .setData(dataMap);
+    } catch (e) {
+      print('Could not save position to firebase');
+      print(e);
+    }
   }
 
   Future<void> _goToTheLake() async {
