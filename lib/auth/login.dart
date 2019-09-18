@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:lingon/auth/loginForm.dart';
 
 
 class LoginPage extends StatelessWidget {
@@ -25,22 +26,22 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTextStyle(
-      style: Theme.of(context).textTheme.display1,
-      child: Container(
+    return Scaffold(
+      body: Container(
         color: Colors.white,
         alignment: Alignment.center,
         child: Column(
           children: <Widget>[
             const Text('Login page'),
+            LoginForm(),
             FlatButton(
-                child: const Text('Sign in with google'),
+                child: const Text('Sign in with Google'),
                 onPressed: () {
                   _handleSignIn();
                 }
             ),
             GestureDetector(
-                child: const Text('Signup'),
+                child: const Text('Create an account instead'),
                 onTap: () { Navigator.pushNamed(context, 'auth/signup'); }
             )
           ],
