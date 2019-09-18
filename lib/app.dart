@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lingon/map.dart';
 
 import 'SettingsPage.dart';
 
@@ -27,10 +28,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   static const TextStyle optionStyle =
   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static final List<Widget> _widgetOptions = <Widget>[
-    const Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
+    MapPage(),
     const Text(
       'Index 1: Business',
       style: optionStyle,
