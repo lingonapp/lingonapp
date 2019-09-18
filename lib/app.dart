@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
+import 'SettingsPage.dart';
+
 /// This Widget is the main application widget.
 class AppPage extends StatelessWidget {
   static const String _title = 'Flutter Code Sample';
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: _title,
-      home: const MyStatefulWidget(),
+      home: MyStatefulWidget(),
     );
   }
 }
@@ -24,19 +26,16 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
+  static final List<Widget> _widgetOptions = <Widget>[
+    const Text(
       'Index 0: Home',
       style: optionStyle,
     ),
-    Text(
+    const Text(
       'Index 1: Business',
       style: optionStyle,
     ),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
+    SettingsPage(),
   ];
 
   void _onItemTapped(int index) {

@@ -12,8 +12,8 @@ class SignUpPage extends StatelessWidget {
             children: <Widget>[
               const Text('Sign up page'),
               GestureDetector(
-                  child: const Text('App'),
-                  onTap: () { Navigator.pushNamed(context, '/app'); }
+                  child: const Text('Login page'),
+                  onTap: () { Navigator.pushNamed(context, 'auth/login'); }
               )
             ],
           )
