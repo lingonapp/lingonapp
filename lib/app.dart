@@ -30,7 +30,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   static final List<Widget> _widgetOptions = <Widget>[
     MapPage(),
     const Text(
-      'Index 1: Business',
+      'Index 1: Chat',
       style: optionStyle,
     ),
     SettingsPage(),
@@ -58,12 +58,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             title: Text('Home'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            title: Text('Business'),
+            icon: Icon(Icons.chat_bubble_outline),
+            title: Text('Chat'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            title: Text('School'),
+            icon: Icon(Icons.settings),
+            title: Text('Setting'),
           ),
         ],
         currentIndex: _selectedIndex,
