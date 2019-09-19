@@ -7,6 +7,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lingon/databaseService.dart';
+import 'package:lingon/userModel.dart';
 import 'package:provider/provider.dart';
 
 class MapPage extends StatefulWidget {
@@ -15,6 +16,7 @@ class MapPage extends StatefulWidget {
 }
 
 class MapState extends State<MapPage> {
+  bool shouldTrackUser = false;
   Geoflutterfire geo = Geoflutterfire();
   final Firestore _firestore = Firestore.instance;
   final Completer<GoogleMapController> _controller = Completer();
@@ -30,16 +32,13 @@ class MapState extends State<MapPage> {
       accuracy: LocationAccuracy.high, distanceFilter: 10);
 
   @override
-  void initState() {
-    super.initState();
-    final FirebaseUser user = Provider.of<FirebaseUser>(context);
-    _refreshLocationPermission();
-    _trackPosition(user.uid);
-  }
-
-  @override
   Widget build(BuildContext context) {
     final FirebaseUser user = Provider.of<FirebaseUser>(context);
+    final UserData userData = Provider.of<UserData>(context);
+    setState(() {
+      shouldTrackUser = userData.private.needsHelp;
+    });
+    _trackPosition(user.uid);
     return Scaffold(
       body: GoogleMap(
         mapType: MapType.hybrid,
@@ -50,13 +49,20 @@ class MapState extends State<MapPage> {
           _controller.complete(controller);
         },
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          _requestHelp(user.uid);
-        },
-        label: const Text('Help'),
-        icon: Icon(Icons.directions_boat),
-      ),
+      floatingActionButton:
+        userData.private.needsHelp ? FloatingActionButton.extended(
+          onPressed: () {
+            _requestHelp(userId: user.uid, needsHelp: false);
+          },
+          label: const Text('Disable'),
+          icon: Icon(Icons.close),
+        ): FloatingActionButton.extended(
+          onPressed: () {
+            _requestHelp(userId: user.uid, needsHelp: true);
+          },
+          label: const Text('Request help'),
+          icon: Icon(Icons.check),
+        ),
     );
   }
 
@@ -73,9 +79,17 @@ class MapState extends State<MapPage> {
     LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 25);
 
     geolocator.getPositionStream(locationOptions).listen((Position position) async {
-      if (position == null) {
+      if (position == null || !shouldTrackUser) {
         return;
       }
+      final GoogleMapController controller = await _controller.future;
+      final CameraUpdate _cameraPosition = CameraUpdate.newLatLng(
+        LatLng(
+          position.latitude,
+          position.longitude,
+        ),
+      );
+      controller.animateCamera(_cameraPosition);
       await _saveToDB(position: position, userId: userId);
     });
   }
@@ -85,21 +99,21 @@ class MapState extends State<MapPage> {
       final GeoFirePoint myLocation = geo.point(
           latitude: position.latitude, longitude: position.longitude);
       final Map<String, dynamic> dataMap = <String, dynamic>{
-        'name': 'me',
+        'active': true,
         'position': myLocation.data,
       };
       _firestore
           .collection('locations')
           .document(userId)
-          .setData(dataMap);
+          .updateData(dataMap);
     } catch (e) {
       print('Could not save position to firebase');
       print(e);
     }
   }
 
-  Future<void> _requestHelp(String userId) async {
+  Future<void> _requestHelp({String userId, bool needsHelp}) async {
     final DatabaseService db = DatabaseService();
-    await db.setNeedsHelp(userId: userId, needsHelp: true);
+    await db.setNeedsHelp(userId: userId, needsHelp: needsHelp);
   }
 }

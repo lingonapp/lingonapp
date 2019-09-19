@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PublicUserData {
-  PublicUserData({this.name});
+  PublicUserData({this.name = ''});
   final String name;
 }
 
 class PrivateUserData {
-  PrivateUserData({this.needsHelp});
+  PrivateUserData({this.needsHelp = false });
   final bool needsHelp;
 }
 
@@ -16,8 +16,8 @@ class UserData {
     final Map<String, dynamic> data = doc.data;
     return UserData(
       id: doc.documentID,
-      private: data['private'] ?? PrivateUserData(needsHelp: false),
-      public: data['public'] ?? PublicUserData(name: ''),
+      private: PrivateUserData(needsHelp: data['private']['needsHelp']) ?? PrivateUserData(needsHelp: false),
+      public: PublicUserData(name: data['private']['name']) ?? PublicUserData(name: ''),
     );
   }
   final String id;

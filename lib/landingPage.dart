@@ -23,7 +23,15 @@ class LandingPage extends StatelessWidget {
       child: AppPage(),
       catchError: (BuildContext error, Object stackTrace) {
         print('inner: $error');
-        return null;
+        print(stackTrace);
+        if(user.uid != null) {
+          db.createEmptyUser(userId: user.uid);
+        }
+        return UserData(
+          id: null,
+          public: PublicUserData(),
+          private: PrivateUserData(),
+        );
       },
     );
   }
