@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:lingon/databaseService.dart';
+import 'package:provider/provider.dart';
 
 class MapPage extends StatefulWidget {
   @override
@@ -16,18 +18,11 @@ class MapState extends State<MapPage> {
   Geoflutterfire geo = Geoflutterfire();
   final Firestore _firestore = Firestore.instance;
   final Completer<GoogleMapController> _controller = Completer();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   static const CameraPosition headQuarters = CameraPosition(
     target: LatLng(59.3225207,18.0443221),
     zoom: 14.4746,
   );
-
-  static const CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
 
   GeolocationStatus geolocationStatus;
   Geolocator geolocator = Geolocator();
@@ -37,12 +32,14 @@ class MapState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
+    final FirebaseUser user = Provider.of<FirebaseUser>(context);
     _refreshLocationPermission();
-    _trackPosition();
+    _trackPosition(user.uid);
   }
 
   @override
   Widget build(BuildContext context) {
+    final FirebaseUser user = Provider.of<FirebaseUser>(context);
     return Scaffold(
       body: GoogleMap(
         mapType: MapType.hybrid,
@@ -54,7 +51,9 @@ class MapState extends State<MapPage> {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
+        onPressed: () {
+          _requestHelp(user.uid);
+        },
         label: const Text('Help'),
         icon: Icon(Icons.directions_boat),
       ),
@@ -65,7 +64,7 @@ class MapState extends State<MapPage> {
     geolocationStatus = await Geolocator().checkGeolocationPermissionStatus();
   }
 
-  Future<void> _trackPosition() async {
+  Future<void> _trackPosition(String userId) async {
     await _refreshLocationPermission();
     if(geolocationStatus == GeolocationStatus.denied) {
       return;
@@ -77,11 +76,11 @@ class MapState extends State<MapPage> {
       if (position == null) {
         return;
       }
-      await _saveToDB(position);
+      await _saveToDB(position: position, userId: userId);
     });
   }
 
-  Future<void> _saveToDB(Position position) async {
+  Future<void> _saveToDB({Position position, String userId}) async {
     try {
       final GeoFirePoint myLocation = geo.point(
           latitude: position.latitude, longitude: position.longitude);
@@ -89,11 +88,9 @@ class MapState extends State<MapPage> {
         'name': 'me',
         'position': myLocation.data,
       };
-      final FirebaseUser user = await _auth.currentUser();
-      final String userID = await user.getIdToken();
       _firestore
           .collection('locations')
-          .document(userID)
+          .document(userId)
           .setData(dataMap);
     } catch (e) {
       print('Could not save position to firebase');
@@ -101,9 +98,8 @@ class MapState extends State<MapPage> {
     }
   }
 
-  Future<void> _goToTheLake() async {
-
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+  Future<void> _requestHelp(String userId) async {
+    final DatabaseService db = DatabaseService();
+    await db.setNeedsHelp(userId: userId, needsHelp: true);
   }
 }
