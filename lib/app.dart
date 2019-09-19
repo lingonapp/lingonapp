@@ -1,5 +1,12 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:lingon/map.dart';
+import 'package:provider/provider.dart';
 
 import 'SettingsPage.dart';
 
@@ -19,6 +26,7 @@ class AppPage extends StatelessWidget {
 class MyStatefulWidget extends StatefulWidget {
   const MyStatefulWidget({Key key}) : super(key: key);
 
+
   @override
   _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
 }
@@ -36,6 +44,30 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     SettingsPage(),
   ];
 
+  final Firestore _db = Firestore.instance;
+  final FirebaseMessaging _fcm = FirebaseMessaging();
+  StreamSubscription<IosNotificationSettings> iosSubscription;
+
+  Future<void> _saveDeviceToken(String userId) async {
+    // Get the token for this device
+    final String fcmToken = await _fcm.getToken();
+    print('fcmtoken $fcmToken');
+    // Save it to Firestore
+    if (fcmToken != null) {
+      final DocumentReference tokens = _db
+          .collection('users')
+          .document(userId)
+          .collection('tokens')
+          .document(fcmToken);
+
+      await tokens.setData(<String, dynamic>{
+        'token': fcmToken,
+        'createdAt': FieldValue.serverTimestamp(), // optional
+        'platform': Platform.operatingSystem // optional
+      });
+    }
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -44,6 +76,27 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final FirebaseUser user = Provider.of<FirebaseUser>(context);
+    if (Platform.isIOS) {
+      iosSubscription = _fcm.onIosSettingsRegistered.listen((IosNotificationSettings data) {
+        _saveDeviceToken(user.uid);
+      });
+
+      _fcm.requestNotificationPermissions(const IosNotificationSettings());
+    } else {
+      _saveDeviceToken(user.uid);
+    }
+    _fcm.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print('onMessage: $message');
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print('onLaunch: $message');
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('onResume: $message');
+      },
+    );
     return Scaffold(
       appBar: AppBar(
         title: const Text('BottomNavigationBar Sample'),
