@@ -41,5 +41,22 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>io.flutter.embedded_views_preview</key>
+	<string>YES</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>com.googleusercontent.apps.148725116494-lg8342ilb3hseb451mrv4bae11hpsjvg</string>
+            </array>
+        </dict>
+    </array>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>We use your position to find relevant users in your area</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>We need your location when finding other users in your area</string>
 </dict>
 </plist>
