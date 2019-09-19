@@ -20,6 +20,7 @@ class MapState extends State<MapPage> {
   Geoflutterfire geo = Geoflutterfire();
   final Firestore _firestore = Firestore.instance;
   final Completer<GoogleMapController> _controller = Completer();
+  Stream<Position> positionStream;
 
   static const CameraPosition headQuarters = CameraPosition(
     target: LatLng(59.3225207,18.0443221),
@@ -50,14 +51,24 @@ class MapState extends State<MapPage> {
         },
       ),
       floatingActionButton:
-        userData.private.needsHelp ? FloatingActionButton.extended(
+        userData.private.needsHelp && geolocationStatus == GeolocationStatus.granted
+            ? FloatingActionButton.extended(
           onPressed: () {
             _requestHelp(userId: user.uid, needsHelp: false);
           },
           label: const Text('Disable'),
           icon: Icon(Icons.close),
         ): FloatingActionButton.extended(
-          onPressed: () {
+          onPressed: () async {
+            if(positionStream == null) {
+              print('Requesting position');
+              try{
+                await geolocator.getCurrentPosition();
+                await _trackPosition(user.uid);
+              } catch (e) {
+                print(e);
+              }
+            }
             _requestHelp(userId: user.uid, needsHelp: true);
           },
           label: const Text('Request help'),
@@ -77,11 +88,18 @@ class MapState extends State<MapPage> {
     }
     final LocationOptions locationOptions =
     LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 25);
+    if(positionStream != null) {
+      print('You already have a position stream');
+      return;
+    }
 
-    geolocator.getPositionStream(locationOptions).listen((Position position) async {
+     positionStream = geolocator.getPositionStream(locationOptions);
+     positionStream.listen((Position position) async {
       if (position == null || !shouldTrackUser) {
+        print('Position $position shouldTrack $shouldTrackUser');
         return;
       }
+      print('New position');
       final GoogleMapController controller = await _controller.future;
       final CameraUpdate _cameraPosition = CameraUpdate.newLatLng(
         LatLng(
@@ -105,7 +123,7 @@ class MapState extends State<MapPage> {
       _firestore
           .collection('locations')
           .document(userId)
-          .updateData(dataMap);
+          .setData(dataMap, merge: true);
     } catch (e) {
       print('Could not save position to firebase');
       print(e);
