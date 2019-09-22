@@ -1,29 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SettingsPage extends StatefulWidget {
-  @override
-  _SettingsPageState createState() => _SettingsPageState();
-}
+import 'authentication/authentication_bloc.dart';
+import 'authentication/authentication_event.dart';
 
-class _SettingsPageState extends State<SettingsPage> {
-  GeolocationStatus geolocationStatus = GeolocationStatus.unknown;
-
-  Future<void> _signOut() async {
-    try {
-      await FirebaseAuth.instance.signOut();
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
+class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -32,10 +14,13 @@ class _SettingsPageState extends State<SettingsPage> {
         FlatButton(
           child: const Text('Sign out'),
           onPressed:() {
-            _signOut();
+            BlocProvider.of<AuthenticationBloc>(context).dispatch(
+              LoggedOut(),
+            );
           },
         ),
       ],
     );
   }
+
 }

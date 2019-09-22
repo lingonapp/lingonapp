@@ -2,36 +2,27 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:lingon/map.dart';
-import 'package:provider/provider.dart';
 
 import 'SettingsPage.dart';
+import 'auth/userrepository.dart';
 
-/// This Widget is the main application widget.
-class AppPage extends StatelessWidget {
-  static const String _title = 'Flutter Code Sample';
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: _title,
-      home: MyStatefulWidget(),
-    );
-  }
-}
-
-class MyStatefulWidget extends StatefulWidget {
-  const MyStatefulWidget({Key key}) : super(key: key);
+class AppPage extends StatefulWidget {
+  const AppPage({Key key, @required UserRepository userRepository})
+      : assert(userRepository != null),
+        _userRepository = userRepository,
+        super(key: key);
+  final UserRepository _userRepository;
 
 
   @override
   _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
 }
 
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+class _MyStatefulWidgetState extends State<AppPage> {
+  UserRepository get _userRepository => widget._userRepository;
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -76,15 +67,16 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final FirebaseUser user = Provider.of<FirebaseUser>(context);
+    // final Future<String> user = await _userRepository.getUser();
+
     if (Platform.isIOS) {
       iosSubscription = _fcm.onIosSettingsRegistered.listen((IosNotificationSettings data) {
-        _saveDeviceToken(user.uid);
+        _saveDeviceToken('asd');
       });
 
       _fcm.requestNotificationPermissions(const IosNotificationSettings());
     } else {
-      _saveDeviceToken(user.uid);
+      _saveDeviceToken('asd');
     }
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
