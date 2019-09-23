@@ -1,14 +1,11 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lingon/databaseService.dart';
-import 'package:lingon/userModel.dart';
-import 'package:provider/provider.dart';
 
 class MapPage extends StatefulWidget {
   @override
@@ -23,23 +20,18 @@ class MapState extends State<MapPage> {
   Stream<Position> positionStream;
 
   static const CameraPosition headQuarters = CameraPosition(
-    target: LatLng(59.3225207,18.0443221),
+    target: LatLng(59.3225207, 18.0443221),
     zoom: 14.4746,
   );
 
   GeolocationStatus geolocationStatus;
   Geolocator geolocator = Geolocator();
-  LocationOptions locationOptions = LocationOptions(
-      accuracy: LocationAccuracy.high, distanceFilter: 10);
+  LocationOptions locationOptions =
+      LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 10);
 
   @override
   Widget build(BuildContext context) {
-    final FirebaseUser user = Provider.of<FirebaseUser>(context);
-    final UserData userData = Provider.of<UserData>(context);
-    setState(() {
-      shouldTrackUser = userData.private.needsHelp;
-    });
-    _trackPosition(user.uid);
+    _trackPosition('uid');
     return Scaffold(
       body: GoogleMap(
         mapType: MapType.hybrid,
@@ -51,29 +43,30 @@ class MapState extends State<MapPage> {
         },
       ),
       floatingActionButton:
-        userData.private.needsHelp && geolocationStatus == GeolocationStatus.granted
-            ? FloatingActionButton.extended(
-          onPressed: () {
-            _requestHelp(userId: user.uid, needsHelp: false);
-          },
-          label: const Text('Disable'),
-          icon: Icon(Icons.close),
-        ): FloatingActionButton.extended(
-          onPressed: () async {
-            if(positionStream == null) {
-              print('Requesting position');
-              try{
-                await geolocator.getCurrentPosition();
-                await _trackPosition(user.uid);
-              } catch (e) {
-                print(e);
-              }
-            }
-            _requestHelp(userId: user.uid, needsHelp: true);
-          },
-          label: const Text('Request help'),
-          icon: Icon(Icons.check),
-        ),
+          false && geolocationStatus == GeolocationStatus.granted
+              ? FloatingActionButton.extended(
+                  onPressed: () {
+                    _requestHelp(userId: 'uid', needsHelp: false);
+                  },
+                  label: const Text('Disable'),
+                  icon: Icon(Icons.close),
+                )
+              : FloatingActionButton.extended(
+                  onPressed: () async {
+                    if (positionStream == null) {
+                      print('Requesting position');
+                      try {
+                        await geolocator.getCurrentPosition();
+                        await _trackPosition('uid');
+                      } catch (e) {
+                        print(e);
+                      }
+                    }
+                    _requestHelp(userId: 'uid', needsHelp: true);
+                  },
+                  label: const Text('Request help'),
+                  icon: Icon(Icons.check),
+                ),
     );
   }
 
@@ -83,18 +76,18 @@ class MapState extends State<MapPage> {
 
   Future<void> _trackPosition(String userId) async {
     await _refreshLocationPermission();
-    if(geolocationStatus == GeolocationStatus.denied) {
+    if (geolocationStatus == GeolocationStatus.denied) {
       return;
     }
     final LocationOptions locationOptions =
-    LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 25);
-    if(positionStream != null) {
+        LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 25);
+    if (positionStream != null) {
       print('You already have a position stream');
       return;
     }
 
-     positionStream = geolocator.getPositionStream(locationOptions);
-     positionStream.listen((Position position) async {
+    positionStream = geolocator.getPositionStream(locationOptions);
+    positionStream.listen((Position position) async {
       if (position == null || !shouldTrackUser) {
         print('Position $position shouldTrack $shouldTrackUser');
         return;
@@ -114,8 +107,8 @@ class MapState extends State<MapPage> {
 
   Future<void> _saveToDB({Position position, String userId}) async {
     try {
-      final GeoFirePoint myLocation = geo.point(
-          latitude: position.latitude, longitude: position.longitude);
+      final GeoFirePoint myLocation =
+          geo.point(latitude: position.latitude, longitude: position.longitude);
       final Map<String, dynamic> dataMap = <String, dynamic>{
         'active': true,
         'position': myLocation.data,

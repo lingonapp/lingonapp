@@ -11,7 +11,7 @@ class UserRepository {
   Future<FirebaseUser> signInWithGoogle() async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
-    await googleUser.authentication;
+        await googleUser.authentication;
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
@@ -19,7 +19,6 @@ class UserRepository {
     await _firebaseAuth.signInWithCredential(credential);
     return _firebaseAuth.currentUser();
   }
-
 
   Future<void> signInWithCredentials(String email, String password) {
     return _firebaseAuth.signInWithEmailAndPassword(
@@ -34,7 +33,6 @@ class UserRepository {
       password: password,
     );
   }
-
 
   Future<void> signOut() async {
     return Future.wait([
@@ -52,4 +50,7 @@ class UserRepository {
     return (await _firebaseAuth.currentUser()).email;
   }
 
+  Future<String> getUserId() async {
+    return (await _firebaseAuth.currentUser()).uid;
+  }
 }

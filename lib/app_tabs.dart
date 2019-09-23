@@ -4,36 +4,32 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:lingon/map.dart';
 
-import 'SettingsPage.dart';
 import 'auth/userrepository.dart';
+import 'userModel.dart';
 
-class AppPage extends StatefulWidget {
-  const AppPage({Key key, @required UserRepository userRepository})
-      : assert(userRepository != null),
+class AppTabs extends StatefulWidget {
+  const AppTabs(
+      {Key key,
+      @required UserRepository userRepository,
+      @required UserData userData})
+      : assert(userRepository != null && userData != null),
         _userRepository = userRepository,
+        _userData = userData,
         super(key: key);
   final UserRepository _userRepository;
-
+  final UserData _userData;
 
   @override
   _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
 }
 
-class _MyStatefulWidgetState extends State<AppPage> {
+class _MyStatefulWidgetState extends State<AppTabs> {
   UserRepository get _userRepository => widget._userRepository;
+  UserData get _userData => widget._userData;
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static final List<Widget> _widgetOptions = <Widget>[
-    MapPage(),
-    const Text(
-      'Index 1: Chat',
-      style: optionStyle,
-    ),
-    SettingsPage(),
-  ];
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   final Firestore _db = Firestore.instance;
   final FirebaseMessaging _fcm = FirebaseMessaging();
@@ -67,16 +63,31 @@ class _MyStatefulWidgetState extends State<AppPage> {
 
   @override
   Widget build(BuildContext context) {
-    // final Future<String> user = await _userRepository.getUser();
+    String id = _userData.private.needsHelp.toString();
+    final List<Widget> _widgetOptions = <Widget>[
+      Text(
+        'Index 0: Map $id',
+        style: optionStyle,
+      ),
+      const Text(
+        'Index 1: Chat',
+        style: optionStyle,
+      ),
+      const Text(
+        'Index 2: settings',
+        style: optionStyle,
+      ),
+    ];
 
     if (Platform.isIOS) {
-      iosSubscription = _fcm.onIosSettingsRegistered.listen((IosNotificationSettings data) {
-        _saveDeviceToken('asd');
+      iosSubscription =
+          _fcm.onIosSettingsRegistered.listen((IosNotificationSettings data) {
+        _saveDeviceToken(_userData.id);
       });
 
       _fcm.requestNotificationPermissions(const IosNotificationSettings());
     } else {
-      _saveDeviceToken('asd');
+      _saveDeviceToken(_userData.id);
     }
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
