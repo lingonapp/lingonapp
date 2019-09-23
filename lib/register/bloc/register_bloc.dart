@@ -18,23 +18,27 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   RegisterState get initialState => RegisterState.empty();
 
   @override
-  Stream<RegisterState> transformEvents(Stream<RegisterEvent> events,
-      Stream<RegisterState> Function(RegisterEvent event) next,) {
+  Stream<RegisterState> transformEvents(
+    Stream<RegisterEvent> events,
+    Stream<RegisterState> Function(RegisterEvent event) next,
+  ) {
     final Observable<RegisterEvent> observableStream = events;
     final Observable<RegisterEvent> nonDebounceStream =
-    observableStream.where((RegisterEvent event) {
+        observableStream.where((RegisterEvent event) {
       return event is! EmailChanged && event is! PasswordChanged;
     });
     final Observable<RegisterEvent> debounceStream =
-    observableStream.where((RegisterEvent event) {
+        observableStream.where((RegisterEvent event) {
       return event is EmailChanged || event is PasswordChanged;
     }).debounceTime(const Duration(milliseconds: 300));
-    return super.transformEvents(
-        nonDebounceStream.mergeWith([debounceStream]), next);
+    return super
+        .transformEvents(nonDebounceStream.mergeWith([debounceStream]), next);
   }
 
   @override
-  Stream<RegisterState> mapEventToState(RegisterEvent event,) async* {
+  Stream<RegisterState> mapEventToState(
+    RegisterEvent event,
+  ) async* {
     if (event is EmailChanged) {
       yield* _mapEmailChangedToState(event.email);
     } else if (event is PasswordChanged) {
@@ -63,8 +67,10 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     );
   }
 
-  Stream<RegisterState> _mapFormSubmittedToState(String email,
-      String password,) async* {
+  Stream<RegisterState> _mapFormSubmittedToState(
+    String email,
+    String password,
+  ) async* {
     yield RegisterState.loading();
     try {
       await _userRepository.signUp(
