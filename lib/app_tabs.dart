@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:lingon/SettingsPage.dart';
 import 'package:lingon/map.dart';
 
 class AppTabs extends StatefulWidget {
@@ -54,10 +55,7 @@ class _MyStatefulWidgetState extends State<AppTabs> {
         'Index 1: Chat',
         style: optionStyle,
       ),
-      const Text(
-        'Index 2: settings',
-        style: optionStyle,
-      ),
+      SettingsPage(),
     ];
     /*
     if (Platform.isIOS) {
