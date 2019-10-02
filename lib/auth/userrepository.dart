@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:lingon/databaseService.dart';
 
 class UserRepository {
   UserRepository({FirebaseAuth firebaseAuth, GoogleSignIn googleSignin})
@@ -28,10 +29,11 @@ class UserRepository {
   }
 
   Future<void> signUp({String email, String password}) async {
-    return await _firebaseAuth.createUserWithEmailAndPassword(
+    final FirebaseUser firebaseUser = await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
+    return await DatabaseService().createEmptyUser(userId: firebaseUser.uid);
   }
 
   Future<void> signOut() async {
