@@ -20,3 +20,9 @@ class LoggedOut extends AuthenticationEvent {
   @override
   String toString() => 'LoggedOut';
 }
+
+class UnverifiedEvent extends AuthenticationEvent {
+  @override
+  String toString() => 'UnverifiedEvent';
+}
+

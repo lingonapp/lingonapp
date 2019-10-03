@@ -3,8 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:lingon/auth/userrepository.dart';
 import 'package:meta/meta.dart';
 
-import 'authentication_event.dart';
-import 'authentication_state.dart';
+import 'bloc.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
@@ -23,6 +22,8 @@ class AuthenticationBloc
       yield* _mapLoggedInToState();
     } else if (event is LoggedOut) {
       yield* _mapLoggedOutToState();
+    } else if(event is UnverifiedEvent) {
+      yield* _mapUnverifiedToState();
     }
   }
 
@@ -30,7 +31,7 @@ class AuthenticationBloc
     try {
       final bool isSignedIn = await _userRepository.isSignedIn();
       if (isSignedIn) {
-        final String name = await _userRepository.getUser();
+        final String name = await _userRepository.getUserEmail();
         yield Authenticated(name);
       } else {
         yield Unauthenticated();
@@ -41,7 +42,11 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapLoggedInToState() async* {
-    yield Authenticated(await _userRepository.getUser());
+    if(await _userRepository.isEmailVerified()) {
+      yield Authenticated(await _userRepository.getUserEmail());
+    } else {
+      dispatch(UnverifiedEvent());
+    }
   }
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {
@@ -49,9 +54,12 @@ class AuthenticationBloc
     _userRepository.signOut();
   }
 
+  Stream<AuthenticationState> _mapUnverifiedToState() async* {
+    yield UnverifiedEmail();
+  }
+
   @override
   AuthenticationState get initialState => Uninitialized();
-
 }
 
 

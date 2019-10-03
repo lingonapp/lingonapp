@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingon/auth/userrepository.dart';
-import 'package:lingon/authentication/authentication_bloc.dart';
-import 'package:lingon/authentication/authentication_event.dart';
+import 'package:lingon/authentication/bloc/authentication_bloc.dart';
+import 'package:lingon/authentication/bloc/authentication_event.dart';
 
 import 'bloc/bloc.dart';
 import 'create_account_button.dart';
