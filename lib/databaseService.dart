@@ -12,29 +12,20 @@ class DatabaseService {
         .map((DocumentSnapshot snap) => UserData.fromFirestore(snap));
   }
 
-  Future<void> createEmptyUser({ String userId }) async {
+  Future<void> createEmptyUser({String userId}) async {
     final Map<String, dynamic> dataMap = <String, dynamic>{
-      'private': <String, dynamic>{
-        'needsHelp': false,
-        'friends': <String>[]
-      },
+      'private': <String, dynamic>{'isInNeed': false, 'friends': <String>[]},
       'public': <String, dynamic>{
         'name': '',
       }
     };
-    return _db
-        .collection('users')
-        .document(userId)
-        .setData(dataMap);
+    return _db.collection('users').document(userId).setData(dataMap);
   }
 
-  Future<void> setNeedsHelp({ String userId, bool needsHelp }) async {
+  Future<void> setInNeed({String userId, bool isInNeed}) async {
     final Map<String, dynamic> dataMap = <String, bool>{
-      'private.needsHelp': needsHelp
+      'private.isInNeed': isInNeed
     };
-    return _db
-        .collection('users')
-        .document(userId)
-        .updateData(dataMap);
+    return _db.collection('users').document(userId).updateData(dataMap);
   }
 }

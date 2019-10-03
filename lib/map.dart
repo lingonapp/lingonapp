@@ -27,9 +27,9 @@ class MapState extends State<MapPage> {
     final PositionBloc positionBloc = BlocProvider.of<PositionBloc>(context);
     return BlocBuilder<CurrentUserBloc, CurrentUserState>(
       builder: (BuildContext context, CurrentUserState state) {
-        final bool needsHelp = state.userData.private.needsHelp;
+        final bool isInNeed = state.userData.private.isInNeed;
         final String userId = state.userData.id;
-        if (needsHelp) {
+        if (isInNeed) {
           positionBloc.dispatch(ListenForPosition(currentUserId: userId));
         }
         return Scaffold(
@@ -37,31 +37,31 @@ class MapState extends State<MapPage> {
             mapType: MapType.hybrid,
             initialCameraPosition: headQuarters,
             myLocationEnabled: true,
-            myLocationButtonEnabled: needsHelp,
+            myLocationButtonEnabled: isInNeed,
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
             },
           ),
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () {
-              _requestHelp(userId: state.userData.id, needsHelp: !needsHelp);
-              if (!needsHelp) {
+              _requestHelp(userId: state.userData.id, isInNeed: !isInNeed);
+              if (!isInNeed) {
                 positionBloc.dispatch(ListenForPosition(currentUserId: userId));
               } else {
                 positionBloc.dispatch(StopListenForPosition());
               }
             },
             label:
-                needsHelp ? const Text('Disable') : const Text('Request help'),
-            icon: needsHelp ? Icon(Icons.close) : Icon(Icons.check),
+                isInNeed ? const Text('Disable') : const Text('Request help'),
+            icon: isInNeed ? Icon(Icons.close) : Icon(Icons.check),
           ),
         );
       },
     );
   }
 
-  Future<void> _requestHelp({String userId, bool needsHelp}) async {
+  Future<void> _requestHelp({String userId, bool isInNeed}) async {
     final DatabaseService db = DatabaseService();
-    await db.setNeedsHelp(userId: userId, needsHelp: needsHelp);
+    await db.setInNeed(userId: userId, isInNeed: isInNeed);
   }
 }
