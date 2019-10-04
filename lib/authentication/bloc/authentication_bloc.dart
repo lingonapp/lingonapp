@@ -14,15 +14,15 @@ class AuthenticationBloc
 
   @override
   Stream<AuthenticationState> mapEventToState(
-      AuthenticationEvent event,
-      ) async* {
+    AuthenticationEvent event,
+  ) async* {
     if (event is AppStarted) {
       yield* _mapAppStartedToState();
     } else if (event is LoggedIn) {
       yield* _mapLoggedInToState();
     } else if (event is LoggedOut) {
       yield* _mapLoggedOutToState();
-    } else if(event is UnverifiedEvent) {
+    } else if (event is UnverifiedEvent) {
       yield* _mapUnverifiedToState();
     }
   }
@@ -30,7 +30,10 @@ class AuthenticationBloc
   Stream<AuthenticationState> _mapAppStartedToState() async* {
     try {
       final bool isSignedIn = await _userRepository.isSignedIn();
-      if (isSignedIn) {
+      final bool isVerified = await _userRepository.isEmailVerified();
+      if (!isVerified) {
+        yield UnverifiedEmail();
+      } else if (isSignedIn) {
         final String name = await _userRepository.getUserEmail();
         yield Authenticated(name);
       } else {
@@ -42,7 +45,7 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapLoggedInToState() async* {
-    if(await _userRepository.isEmailVerified()) {
+    if (await _userRepository.isEmailVerified()) {
       yield Authenticated(await _userRepository.getUserEmail());
     } else {
       dispatch(UnverifiedEvent());
@@ -61,5 +64,3 @@ class AuthenticationBloc
   @override
   AuthenticationState get initialState => Uninitialized();
 }
-
-
