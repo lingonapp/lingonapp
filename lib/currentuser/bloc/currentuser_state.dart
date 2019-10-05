@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 
 @immutable
 abstract class CurrentUserState extends Equatable {
-  CurrentUserState([List props = const <dynamic>[]]) : super(props);
+  CurrentUserState([List<dynamic> props = const <dynamic>[]]) : super(props);
   UserData userData;
 }
 

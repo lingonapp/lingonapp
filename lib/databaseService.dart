@@ -13,19 +13,15 @@ class DatabaseService {
   }
 
   Future<void> createEmptyUser({String userId}) async {
-    final Map<String, dynamic> dataMap = <String, dynamic>{
-      'private': <String, dynamic>{'isInNeed': false, 'friends': <String>[]},
-      'public': <String, dynamic>{
-        'name': '',
-      }
-    };
-    return _db.collection('users').document(userId).setData(dataMap);
+    final UserData emptyUser = UserData(id: userId, isInNeed: false);
+    return _db
+        .collection('users')
+        .document(userId)
+        .setData(emptyUser.serialize());
   }
 
   Future<void> setInNeed({String userId, bool isInNeed}) async {
-    final Map<String, dynamic> dataMap = <String, bool>{
-      'private.isInNeed': isInNeed
-    };
+    final Map<String, dynamic> dataMap = <String, bool>{'isInNeed': isInNeed};
     return _db.collection('users').document(userId).updateData(dataMap);
   }
 }
