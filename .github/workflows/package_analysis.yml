@@ -1,16 +1,14 @@
 name: Package Analysis
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
-  build:
-
+  package-analysis:
     runs-on: ubuntu-latest
-
-    container:
-      image:  google/dart:latest
-
     steps:
       - uses: actions/checkout@v1
-      - name: Dart/Flutter Package Analyzer
-        uses: axel-op/dart_package_analyzer@v1.1.0
+      - uses: axel-op/dart_package_analyzer@master
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          eventPayload: ${{ toJson(github.event) }}
+          commitSha: ${{ github.sha }}
