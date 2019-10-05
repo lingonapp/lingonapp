@@ -65,7 +65,6 @@ android {
         debug {
             signingConfig signingConfigs.debug
             applicationIdSuffix ".debug"
-            minSdkVersion 21
         }
         release {
             signingConfig signingConfigs.release
