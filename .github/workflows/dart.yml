@@ -12,11 +12,12 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - uses: subosito/flutter-action@v1.1.1
-      with:
-        flutter-version: '1.7.8+hotfix.4'
-        channel: 'beta'
     - name: Install dependencies
-      run: flutter pub get
+      uses: steebchen/flutter@v1.0.0
+      with:
+        args: pub get
+
     - name: Run tests
-      run: flutter pub run test
+      uses: steebchen/flutter@v1.0.0
+      with:
+        args: test
