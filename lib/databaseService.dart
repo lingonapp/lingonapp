@@ -24,4 +24,21 @@ class DatabaseService {
     final Map<String, dynamic> dataMap = <String, bool>{'isInNeed': isInNeed};
     return _db.collection('users').document(userId).updateData(dataMap);
   }
+
+  Future<void> updateUser({String userId, String name, String photoUrl}) async {
+    final DocumentSnapshot profileData =
+        await _db.collection('users').document(userId).get();
+    if (!profileData.exists) {
+      print('Current google user has no profile data. Creating empty user');
+      await createEmptyUser(userId: userId);
+    }
+    final Map<String, dynamic> dataMap = <String, String>{
+      'name': name,
+      'photoUrl': photoUrl
+    };
+    return _db
+        .collection('users')
+        .document(userId)
+        .setData(dataMap, merge: true);
+  }
 }

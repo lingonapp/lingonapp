@@ -1,10 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 
 class UserData {
-  UserData({this.id, this.isInNeed});
+  UserData({@required this.id, this.isInNeed = false});
 
   factory UserData.fromFirestore(DocumentSnapshot doc) {
     final Map<String, dynamic> data = doc.data;
+    if (!doc.exists) {
+      return UserData(
+        id: doc.documentID,
+      );
+    }
     return UserData(
       id: doc.documentID,
       isInNeed: data['isInNeed'],
