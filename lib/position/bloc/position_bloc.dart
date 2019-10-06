@@ -27,10 +27,6 @@ class PositionBloc extends Bloc<PositionEvent, PositionState> {
   ) async* {
     if (event is ListenForPosition) {
       currentUserId = event.currentUserId;
-      geolocationStatus = await Geolocator().checkGeolocationPermissionStatus();
-      if (geolocationStatus == GeolocationStatus.denied) {
-        return;
-      }
       subscription?.cancel();
       positionStream = geolocator.getPositionStream(locationOptions);
       subscription = positionStream.listen(

@@ -9,8 +9,9 @@ import './bloc.dart';
 
 class CurrentUserBloc extends Bloc<CurrentUserEvent, CurrentUserState> {
   CurrentUserBloc({this.userRepository, this.userData});
+
   final UserRepository userRepository;
-  StreamSubscription subscription;
+  StreamSubscription<UserData> subscription;
   UserData userData;
 
   @override
