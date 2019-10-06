@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:lingon/SettingsPage.dart';
 import 'package:lingon/map.dart';
+import 'package:lingon/settings/screens/settings_screen.dart';
 
 class AppTabs extends StatefulWidget {
   @override
@@ -17,29 +15,7 @@ class _MyStatefulWidgetState extends State<AppTabs> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  final Firestore _db = Firestore.instance;
-  final FirebaseMessaging _fcm = FirebaseMessaging();
   StreamSubscription<IosNotificationSettings> iosSubscription;
-
-  Future<void> _saveDeviceToken(String userId) async {
-    // Get the token for this device
-    final String fcmToken = await _fcm.getToken();
-    print('fcmtoken $fcmToken');
-    // Save it to Firestore
-    if (fcmToken != null) {
-      final DocumentReference tokens = _db
-          .collection('users')
-          .document(userId)
-          .collection('tokens')
-          .document(fcmToken);
-
-      await tokens.setData(<String, dynamic>{
-        'token': fcmToken,
-        'createdAt': FieldValue.serverTimestamp(), // optional
-        'platform': Platform.operatingSystem // optional
-      });
-    }
-  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -55,31 +31,8 @@ class _MyStatefulWidgetState extends State<AppTabs> {
         'Index 1: Chat',
         style: optionStyle,
       ),
-      SettingsPage(),
+      SettingsScreen(),
     ];
-    /*
-    if (Platform.isIOS) {
-      iosSubscription =
-          _fcm.onIosSettingsRegistered.listen((IosNotificationSettings data) {
-        _saveDeviceToken(userData.userData.id);
-      });
-
-      _fcm.requestNotificationPermissions(const IosNotificationSettings());
-    } else {
-      _saveDeviceToken(userData.userData.id);
-    }
-    _fcm.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print('onMessage: $message');
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print('onLaunch: $message');
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print('onResume: $message');
-      },
-    );
-     */
     return Scaffold(
       appBar: AppBar(
         title: const Text('BottomNavigationBar Sample'),
