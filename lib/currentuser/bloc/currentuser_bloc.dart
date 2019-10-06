@@ -8,11 +8,10 @@ import 'package:lingon/userModel.dart';
 import './bloc.dart';
 
 class CurrentUserBloc extends Bloc<CurrentUserEvent, CurrentUserState> {
-  CurrentUserBloc({this.userRepository, this.userData});
+  CurrentUserBloc({this.userRepository});
 
   final UserRepository userRepository;
   StreamSubscription<UserData> subscription;
-  UserData userData;
 
   @override
   CurrentUserState get initialState => InitialCurrentUserState();
