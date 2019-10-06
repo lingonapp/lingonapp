@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:lingon/SettingsPage.dart';
 import 'package:lingon/map.dart';
+import 'package:lingon/settings/screens/settings_screen.dart';
 
 class AppTabs extends StatefulWidget {
   @override
@@ -17,10 +15,11 @@ class _MyStatefulWidgetState extends State<AppTabs> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  final Firestore _db = Firestore.instance;
-  final FirebaseMessaging _fcm = FirebaseMessaging();
   StreamSubscription<IosNotificationSettings> iosSubscription;
 
+  /*
+  final Firestore _db = Firestore.instance;
+  final FirebaseMessaging _fcm = FirebaseMessaging();
   Future<void> _saveDeviceToken(String userId) async {
     // Get the token for this device
     final String fcmToken = await _fcm.getToken();
@@ -39,7 +38,7 @@ class _MyStatefulWidgetState extends State<AppTabs> {
         'platform': Platform.operatingSystem // optional
       });
     }
-  }
+  } */
 
   void _onItemTapped(int index) {
     setState(() {
@@ -55,7 +54,7 @@ class _MyStatefulWidgetState extends State<AppTabs> {
         'Index 1: Chat',
         style: optionStyle,
       ),
-      SettingsPage(),
+      SettingsScreen(),
     ];
     /*
     if (Platform.isIOS) {
