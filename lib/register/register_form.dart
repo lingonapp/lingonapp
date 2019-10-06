@@ -6,7 +6,6 @@ import 'package:lingon/register/register_button.dart';
 
 import 'bloc/bloc.dart';
 
-
 class RegisterForm extends StatefulWidget {
   @override
   State<RegisterForm> createState() => _RegisterFormState();
@@ -44,7 +43,7 @@ class _RegisterFormState extends State<RegisterForm> {
               SnackBar(
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const <Widget> [
+                  children: const <Widget>[
                     Text('Registering...'),
                     CircularProgressIndicator(),
                   ],
