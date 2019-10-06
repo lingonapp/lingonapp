@@ -17,29 +17,6 @@ class _MyStatefulWidgetState extends State<AppTabs> {
 
   StreamSubscription<IosNotificationSettings> iosSubscription;
 
-  /*
-  final Firestore _db = Firestore.instance;
-  final FirebaseMessaging _fcm = FirebaseMessaging();
-  Future<void> _saveDeviceToken(String userId) async {
-    // Get the token for this device
-    final String fcmToken = await _fcm.getToken();
-    print('fcmtoken $fcmToken');
-    // Save it to Firestore
-    if (fcmToken != null) {
-      final DocumentReference tokens = _db
-          .collection('users')
-          .document(userId)
-          .collection('tokens')
-          .document(fcmToken);
-
-      await tokens.setData(<String, dynamic>{
-        'token': fcmToken,
-        'createdAt': FieldValue.serverTimestamp(), // optional
-        'platform': Platform.operatingSystem // optional
-      });
-    }
-  } */
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -56,29 +33,6 @@ class _MyStatefulWidgetState extends State<AppTabs> {
       ),
       SettingsScreen(),
     ];
-    /*
-    if (Platform.isIOS) {
-      iosSubscription =
-          _fcm.onIosSettingsRegistered.listen((IosNotificationSettings data) {
-        _saveDeviceToken(userData.userData.id);
-      });
-
-      _fcm.requestNotificationPermissions(const IosNotificationSettings());
-    } else {
-      _saveDeviceToken(userData.userData.id);
-    }
-    _fcm.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print('onMessage: $message');
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print('onLaunch: $message');
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print('onResume: $message');
-      },
-    );
-     */
     return Scaffold(
       appBar: AppBar(
         title: const Text('BottomNavigationBar Sample'),
