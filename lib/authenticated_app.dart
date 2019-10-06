@@ -6,7 +6,6 @@ import 'package:lingon/position/bloc/bloc.dart';
 import 'app_tabs.dart';
 import 'currentuser/bloc/bloc.dart';
 import 'splash.dart';
-import 'userModel.dart';
 
 @immutable
 class AuthenticatedApp extends StatelessWidget {
@@ -15,13 +14,12 @@ class AuthenticatedApp extends StatelessWidget {
         _userRepository = userRepository;
 
   final UserRepository _userRepository;
-  final UserData _currentUser = UserData();
   final PositionBloc _positionBloc = PositionBloc();
 
   @override
   Widget build(BuildContext context) {
-    final CurrentUserBloc _currentUserBloc = CurrentUserBloc(
-        userRepository: _userRepository, userData: _currentUser);
+    final CurrentUserBloc _currentUserBloc =
+        CurrentUserBloc(userRepository: _userRepository);
     _currentUserBloc.dispatch(InitializeCurrentUser());
     return MultiBlocProvider(
       providers: [
