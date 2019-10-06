@@ -56,7 +56,10 @@ class _LoginFormState extends State<LoginForm> {
               SnackBar(
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const <Widget> [Text('Login Failure'), Icon(Icons.error)],
+                  children: const <Widget>[
+                    Text('Login Failure'),
+                    Icon(Icons.error)
+                  ],
                 ),
                 backgroundColor: Colors.red,
               ),
@@ -69,7 +72,7 @@ class _LoginFormState extends State<LoginForm> {
               SnackBar(
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const <Widget> [
+                  children: const <Widget>[
                     Text('Logging In...'),
                     CircularProgressIndicator(),
                   ],

@@ -3,7 +3,8 @@ import 'package:meta/meta.dart';
 
 @immutable
 abstract class AuthenticationEvent extends Equatable {
-  const AuthenticationEvent([List<String> props = const <String>[]]) : super(props);
+  const AuthenticationEvent([List<String> props = const <String>[]])
+      : super(props);
 }
 
 class AppStarted extends AuthenticationEvent {
@@ -25,4 +26,3 @@ class UnverifiedEvent extends AuthenticationEvent {
   @override
   String toString() => 'UnverifiedEvent';
 }
-

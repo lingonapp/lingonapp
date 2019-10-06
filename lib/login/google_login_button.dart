@@ -5,7 +5,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'bloc/login_bloc.dart';
 import 'bloc/login_event.dart';
 
-
 class GoogleLoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
