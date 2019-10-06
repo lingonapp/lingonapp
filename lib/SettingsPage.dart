@@ -2,8 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'authentication/authentication_bloc.dart';
-import 'authentication/authentication_event.dart';
+import 'authentication/bloc/bloc.dart';
 
 class SettingsPage extends StatelessWidget {
   @override
@@ -22,5 +21,4 @@ class SettingsPage extends StatelessWidget {
       ],
     );
   }
-
 }

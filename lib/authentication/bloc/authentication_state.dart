@@ -24,3 +24,8 @@ class Unauthenticated extends AuthenticationState {
   @override
   String toString() => 'Unauthenticated';
 }
+
+class UnverifiedEmail extends AuthenticationState {
+  @override
+  String toString() => 'UnverifiedEmail';
+}

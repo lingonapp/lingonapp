@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lingon/auth/userrepository.dart';
 import 'package:lingon/register/bloc/register_event.dart';
 import 'package:lingon/register/bloc/register_state.dart';
@@ -73,10 +74,11 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   ) async* {
     yield RegisterState.loading();
     try {
-      await _userRepository.signUp(
+      FirebaseUser firebaseUser = await _userRepository.signUp(
         email: email,
         password: password,
       );
+      await firebaseUser.sendEmailVerification();
       yield RegisterState.success();
     } catch (_) {
       yield RegisterState.failure();

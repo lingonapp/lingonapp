@@ -3,13 +3,14 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lingon/authentication/screens/verify_email_screen.dart';
 import 'package:lingon/login/screens/loginscreen.dart';
 import 'package:lingon/splash.dart';
 import 'package:lingon/theme.dart';
 
 import 'auth/userrepository.dart';
 import 'authenticated_app.dart';
-import 'authentication/bloc.dart';
+import 'authentication/bloc/bloc.dart';
 import 'blocdelegate.dart';
 
 void main() {
@@ -53,6 +54,10 @@ class _MainState extends State<Main> {
             }
             if (state == Unauthenticated()) {
               return LoginScreen(userRepository: _userRepository);
+            }
+
+            if (state == UnverifiedEmail()) {
+              return VerifyEmail();
             }
             return AuthenticatedApp(
               userRepository: _userRepository,

@@ -33,13 +33,14 @@ class UserRepository {
     );
   }
 
-  Future<void> signUp({String email, String password}) async {
+  Future<FirebaseUser> signUp({String email, String password}) async {
     final FirebaseUser firebaseUser =
         await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
-    return await DatabaseService().createEmptyUser(userId: firebaseUser.uid);
+    await DatabaseService().createEmptyUser(userId: firebaseUser.uid);
+    return firebaseUser;
   }
 
   Future<void> signOut() async {
@@ -54,11 +55,15 @@ class UserRepository {
     return currentUser != null;
   }
 
-  Future<String> getUser() async {
+  Future<String> getUserEmail() async {
     return (await _firebaseAuth.currentUser()).email;
   }
 
   Future<String> getUserId() async {
     return (await _firebaseAuth.currentUser()).uid;
+  }
+
+  Future<bool> isEmailVerified() async {
+    return (await _firebaseAuth.currentUser()).isEmailVerified;
   }
 }
