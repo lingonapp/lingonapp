@@ -27,7 +27,7 @@ class MapState extends State<MapPage> {
     final PositionBloc positionBloc = BlocProvider.of<PositionBloc>(context);
     return BlocBuilder<CurrentUserBloc, CurrentUserState>(
       builder: (BuildContext context, CurrentUserState state) {
-        final bool isInNeed = state.userData.private.isInNeed;
+        final bool isInNeed = state.userData.isInNeed;
         final String userId = state.userData.id;
         if (isInNeed) {
           positionBloc.dispatch(ListenForPosition(currentUserId: userId));

@@ -1,32 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-class PublicUserData {
-  PublicUserData({this.name = ''});
-
-  final String name;
-}
-
-class PrivateUserData {
-  PrivateUserData({this.isInNeed = false});
-
-  final bool isInNeed;
-}
+import 'package:flutter/cupertino.dart';
 
 class UserData {
-  UserData({this.id, this.public, this.private});
+  UserData({@required this.id, this.isInNeed = false});
 
   factory UserData.fromFirestore(DocumentSnapshot doc) {
     final Map<String, dynamic> data = doc.data;
+    if (!doc.exists) {
+      return UserData(
+        id: doc.documentID,
+      );
+    }
     return UserData(
       id: doc.documentID,
-      private: PrivateUserData(isInNeed: data['private']['isInNeed']) ??
-          PrivateUserData(isInNeed: false),
-      public: PublicUserData(name: data['private']['name']) ??
-          PublicUserData(name: ''),
+      isInNeed: data['isInNeed'],
     );
   }
 
   final String id;
-  final PublicUserData public;
-  final PrivateUserData private;
+  final bool isInNeed;
+
+  Map<String, dynamic> serialize() {
+    final Map<String, dynamic> dataMap = <String, dynamic>{
+      'id': id,
+      'name': 'unknown',
+      'isInNeed': isInNeed,
+    };
+    return dataMap;
+  }
 }
