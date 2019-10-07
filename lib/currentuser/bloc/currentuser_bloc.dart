@@ -22,7 +22,7 @@ class CurrentUserBloc extends Bloc<CurrentUserEvent, CurrentUserState> {
   ) async* {
     if (event is InitializeCurrentUser) {
       final String userId = await userRepository.getUserId();
-      subscription?.cancel();
+      await subscription?.cancel();
       subscription = DatabaseService()
           .streamUser(userId)
           .listen((UserData user) => dispatch(UserUpdated(user)));
