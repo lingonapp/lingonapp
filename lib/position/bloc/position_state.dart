@@ -16,6 +16,9 @@ class PositionState extends Equatable {
   }
 
   final Position currentPosition;
+
+  @override
+  List<Object> get props => [currentPosition];
 }
 
 class InitialPositionState extends PositionState {}

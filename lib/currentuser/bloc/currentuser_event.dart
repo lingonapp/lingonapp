@@ -4,11 +4,13 @@ import 'package:meta/meta.dart';
 
 @immutable
 abstract class CurrentUserEvent extends Equatable {
-  const CurrentUserEvent([List<dynamic> props = const <dynamic>[]])
-      : super(props);
+  const CurrentUserEvent([List<dynamic> props = const <dynamic>[]]) : super();
 }
 
-class InitializeCurrentUser extends CurrentUserEvent {}
+class InitializeCurrentUser extends CurrentUserEvent {
+  @override
+  List<Object> get props => null;
+}
 
 class UserUpdated extends CurrentUserEvent {
   UserUpdated(this.userData) : super(<UserData>[userData]);
@@ -16,4 +18,7 @@ class UserUpdated extends CurrentUserEvent {
 
   @override
   String toString() => 'User updated: ' + userData.id;
+
+  @override
+  List<Object> get props => [userData];
 }
