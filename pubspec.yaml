@@ -1,5 +1,12 @@
 name: lingon
-description: Help when you need it the most
+description:  >-
+  Help when you need it the most.
+  Use Lingon to find people near you who needs help during their time at the month or get help
+  when you need it.
+homepage: https://lingon.app
+documentation: https://lingon.app/docs
+repository: https://github.com/mackattack3k/lingonapp
+issue_tracker: https://github.com/mackattack3k/lingonapp/issues
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
