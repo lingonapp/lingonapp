@@ -27,7 +27,7 @@ class PositionBloc extends Bloc<PositionEvent, PositionState> {
   ) async* {
     if (event is ListenForPosition) {
       currentUserId = event.currentUserId;
-      subscription?.cancel();
+      await subscription?.cancel();
       positionStream = geolocator.getPositionStream(locationOptions);
       subscription = positionStream.listen(
           (Position position) => dispatch(UpdatePosition(position: position)));
@@ -35,10 +35,10 @@ class PositionBloc extends Bloc<PositionEvent, PositionState> {
     if (event is UpdatePosition) {
       final Position position = event.position;
       yield PositionState.update(position: position);
-      _saveToDB(position: position);
+      await _saveToDB(position: position);
     }
     if (event is StopListenForPosition) {
-      subscription?.cancel();
+      await subscription?.cancel();
     }
   }
 
@@ -53,7 +53,7 @@ class PositionBloc extends Bloc<PositionEvent, PositionState> {
         'active': true,
         'position': myLocation.data,
       };
-      _firestore
+      await _firestore
           .collection('locations')
           .document(currentUserId)
           .setData(dataMap, merge: true);

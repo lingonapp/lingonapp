@@ -10,7 +10,7 @@ class VerifyAccountPage extends StatelessWidget {
     if (user == null || user.isEmailVerified) {
       return;
     }
-    user.sendEmailVerification();
+    await user.sendEmailVerification();
     print('Sent verification email');
   }
 

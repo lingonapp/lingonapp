@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:lingon/auth/userrepository.dart';
 import 'package:meta/meta.dart';
@@ -54,7 +55,7 @@ class AuthenticationBloc
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {
     yield Unauthenticated();
-    _userRepository.signOut();
+    await _userRepository.signOut();
   }
 
   Stream<AuthenticationState> _mapUnverifiedToState() async* {

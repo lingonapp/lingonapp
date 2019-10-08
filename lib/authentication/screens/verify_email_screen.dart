@@ -9,7 +9,7 @@ class VerifyEmail extends StatelessWidget {
   Future<void> _resendEmail() async {
     final FirebaseUser user = await _auth.currentUser();
     if (user != null) {
-      user.sendEmailVerification();
+      await user.sendEmailVerification();
     }
   }
 

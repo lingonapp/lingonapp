@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 
 @immutable
 abstract class PositionEvent extends Equatable {
-  const PositionEvent([List<dynamic> props = const <dynamic>[]]) : super(props);
+  const PositionEvent([List<dynamic> props = const <dynamic>[]]) : super();
 }
 
 class UpdatePosition extends PositionEvent {
@@ -17,6 +17,9 @@ class UpdatePosition extends PositionEvent {
       $position
     }''';
   }
+
+  @override
+  List<Object> get props => [position];
 }
 
 class ListenForPosition extends PositionEvent {
@@ -28,6 +31,12 @@ class ListenForPosition extends PositionEvent {
   String toString() {
     return 'Listening for position for user: ' + currentUserId;
   }
+
+  @override
+  List<Object> get props => [currentUserId];
 }
 
-class StopListenForPosition extends PositionEvent {}
+class StopListenForPosition extends PositionEvent {
+  @override
+  List<Object> get props => null;
+}

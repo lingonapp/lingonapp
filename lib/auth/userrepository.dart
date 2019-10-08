@@ -34,11 +34,12 @@ class UserRepository {
   }
 
   Future<FirebaseUser> signUp({String email, String password}) async {
-    final FirebaseUser firebaseUser =
+    final AuthResult createResult =
         await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
+    FirebaseUser firebaseUser = createResult.user;
     await DatabaseService().createEmptyUser(userId: firebaseUser.uid);
     return firebaseUser;
   }

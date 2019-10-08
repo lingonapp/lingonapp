@@ -6,14 +6,20 @@ import 'package:meta/meta.dart';
 abstract class CurrentUserState extends Equatable {
   const CurrentUserState(this.userData,
       [List<dynamic> props = const <dynamic>[]])
-      : super(props);
+      : super();
   final UserData userData;
 }
 
 class InitialCurrentUserState extends CurrentUserState {
   const InitialCurrentUserState() : super(null);
+
+  @override
+  List<Object> get props => null;
 }
 
 class UpdateUser extends CurrentUserState {
   const UpdateUser(UserData userData) : super(userData);
+
+  @override
+  List<Object> get props => [userData];
 }
