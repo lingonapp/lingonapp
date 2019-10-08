@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingon/auth/userrepository.dart';
-import 'package:lingon/position/bloc/bloc.dart';
+import 'package:lingon/users/users_bloc.dart';
 
 import 'app_tabs.dart';
 import 'currentuser/bloc/bloc.dart';
-import 'splash.dart';
+import 'loading/screens/loading_screen.dart';
+import 'position/bloc/bloc.dart';
 
 @immutable
 class AuthenticatedApp extends StatelessWidget {
@@ -18,6 +19,7 @@ class AuthenticatedApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final UsersBloc _usersBloc = UsersBloc(_positionBloc);
     final CurrentUserBloc _currentUserBloc =
         CurrentUserBloc(userRepository: _userRepository);
     _currentUserBloc.dispatch(InitializeCurrentUser());
@@ -28,13 +30,16 @@ class AuthenticatedApp extends StatelessWidget {
         ),
         BlocProvider<PositionBloc>(
           builder: (BuildContext context) => _positionBloc,
+        ),
+        BlocProvider<UsersBloc>(
+          builder: (BuildContext context) => _usersBloc,
         )
       ],
       child: BlocBuilder<CurrentUserBloc, CurrentUserState>(
         bloc: _currentUserBloc,
         builder: (BuildContext context, CurrentUserState userState) {
           if (userState == InitialCurrentUserState()) {
-            return SplashPage();
+            return LoadingScreen();
           }
           return AppTabs();
         },

@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:lingon/loading/screens/loading_screen.dart';
 import 'package:lingon/map.dart';
 import 'package:lingon/settings/screens/settings_screen.dart';
+import 'package:lingon/theme.dart';
 
 class AppTabs extends StatefulWidget {
   @override
@@ -27,16 +29,10 @@ class _MyStatefulWidgetState extends State<AppTabs> {
   Widget build(BuildContext context) {
     final List<Widget> _widgetOptions = <Widget>[
       MapPage(),
-      const Text(
-        'Index 1: Chat',
-        style: optionStyle,
-      ),
+      LoadingScreen(),
       SettingsScreen(),
     ];
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('BottomNavigationBar Sample'),
-      ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
@@ -56,7 +52,7 @@ class _MyStatefulWidgetState extends State<AppTabs> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: lingonTheme.accentColor,
         onTap: _onItemTapped,
       ),
     );

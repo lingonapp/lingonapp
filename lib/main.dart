@@ -6,8 +6,8 @@ import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingon/authentication/screens/verify_email_screen.dart';
+import 'package:lingon/loading/screens/loading_screen.dart';
 import 'package:lingon/login/screens/loginscreen.dart';
-import 'package:lingon/splash.dart';
 import 'package:lingon/theme.dart';
 
 import 'auth/userrepository.dart';
@@ -64,7 +64,7 @@ class _MainState extends State<Main> {
           bloc: _authenticationBloc,
           builder: (BuildContext context, AuthenticationState state) {
             if (state == Uninitialized()) {
-              return SplashPage();
+              return LoadingScreen();
             }
             splashTrace.stop();
             if (state == Unauthenticated()) {
