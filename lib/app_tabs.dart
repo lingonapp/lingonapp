@@ -2,10 +2,11 @@ import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:lingon/loading/screens/loading_screen.dart';
 import 'package:lingon/map.dart';
 import 'package:lingon/settings/screens/settings_screen.dart';
 import 'package:lingon/theme.dart';
+
+import 'chat/screens/chat_screen.dart';
 
 class AppTabs extends StatefulWidget {
   @override
@@ -29,7 +30,7 @@ class _MyStatefulWidgetState extends State<AppTabs> {
   Widget build(BuildContext context) {
     final List<Widget> _widgetOptions = <Widget>[
       MapPage(),
-      LoadingScreen(),
+      ChatScreen(),
       SettingsScreen(),
     ];
     return Scaffold(
