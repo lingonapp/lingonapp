@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingon/authentication/screens/verify_email_screen.dart';
@@ -48,6 +49,9 @@ class _MainState extends State<Main> {
 
   @override
   Widget build(BuildContext context) {
+    final Trace splashTrace =
+        FirebasePerformance.instance.newTrace("Splash screen");
+    splashTrace.start();
     return BlocProvider<AuthenticationBloc>(
       builder: (BuildContext context) => _authenticationBloc,
       child: MaterialApp(
@@ -62,6 +66,7 @@ class _MainState extends State<Main> {
             if (state == Uninitialized()) {
               return SplashPage();
             }
+            splashTrace.stop();
             if (state == Unauthenticated()) {
               return LoginScreen(userRepository: _userRepository);
             }
