@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import './bloc.dart';
 
@@ -15,7 +16,7 @@ class PositionBloc extends Bloc<PositionEvent, PositionState> {
   final Firestore _firestore = Firestore.instance;
   Geoflutterfire geo = Geoflutterfire();
   LocationOptions locationOptions =
-      LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 10);
+      LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 50);
   String currentUserId;
 
   @override
@@ -28,6 +29,17 @@ class PositionBloc extends Bloc<PositionEvent, PositionState> {
     if (event is ListenForPosition) {
       currentUserId = event.currentUserId;
       await subscription?.cancel();
+      Position lastKnownDeviceLocation =
+          await geolocator.getLastKnownPosition();
+      if (lastKnownDeviceLocation != null) {
+        dispatch(UpdatePosition(position: lastKnownDeviceLocation));
+      } else {
+        var headQuarters = LatLng(59.3347524, 18.0965903);
+        dispatch(UpdatePosition(
+            position: Position(
+                latitude: headQuarters.latitude,
+                longitude: headQuarters.longitude)));
+      }
       positionStream = geolocator.getPositionStream(locationOptions);
       subscription = positionStream.listen(
           (Position position) => dispatch(UpdatePosition(position: position)));
