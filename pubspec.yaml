@@ -45,12 +45,15 @@ dependencies:
   equatable: ^0.6.1
   bloc: ^0.15.0
   font_awesome_flutter: ^8.5.0
+  jaguar_serializer: ^2.2.12
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   pedantic: ^1.8.0+1
+  build_runner: ^1.7.1
+  jaguar_serializer_cli: ^2.2.8
 
 
 # For information on the generic Dart part of this file, see the

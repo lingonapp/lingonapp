@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingon/auth/userrepository.dart';
+import 'package:lingon/chat/bloc/bloc.dart';
 import 'package:lingon/users/users_bloc.dart';
 
 import 'app_tabs.dart';
@@ -16,6 +17,7 @@ class AuthenticatedApp extends StatelessWidget {
 
   final UserRepository _userRepository;
   final PositionBloc _positionBloc = PositionBloc();
+  final ChatBloc _chatBloc = ChatBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,9 @@ class AuthenticatedApp extends StatelessWidget {
         ),
         BlocProvider<UsersBloc>(
           builder: (BuildContext context) => _usersBloc,
+        ),
+        BlocProvider<ChatBloc>(
+          builder: (BuildContext context) => _chatBloc,
         )
       ],
       child: BlocBuilder<CurrentUserBloc, CurrentUserState>(
@@ -41,6 +46,8 @@ class AuthenticatedApp extends StatelessWidget {
           if (userState == InitialCurrentUserState()) {
             return LoadingScreen();
           }
+          _chatBloc
+              .dispatch(ListenForChats(currentUserId: userState.userData.id));
           return AppTabs();
         },
       ),
