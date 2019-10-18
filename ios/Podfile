@@ -1,8 +1,14 @@
 # Using a CDN with CocoaPods 1.7.2 or later can save a lot of time on pod installation, but it's experimental rather than the default.
 # source 'https://cdn.cocoapods.org/'
 
-# Uncomment this line to define a global platform for your project
-# platform :ios, '9.0'
+# define a global platform for your project
+platform :ios, '9.0'
+
+pod 'Firebase/Core'
+pod 'Firebase/Analytics'
+pod 'Firebase/Auth'
+pod 'Firebase/Firestore'
+pod 'Firebase/Messaging'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
@@ -55,11 +61,6 @@ target 'Runner' do
       pod 'Flutter', :path => File.join(symlink, File.basename(p[:path]))
     end
   }
-  
-  pod 'Firebase/Analytics'
-  pod 'Firebase/Auth'
-  pod 'Firebase/Firestore'
-  pod 'Firebase/Messaging'
 
   # Plugin Pods
   plugin_pods = parse_KV_file('../.flutter-plugins')
