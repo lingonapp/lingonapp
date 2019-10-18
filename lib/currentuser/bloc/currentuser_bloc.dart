@@ -25,7 +25,7 @@ class CurrentUserBloc extends Bloc<CurrentUserEvent, CurrentUserState> {
       await subscription?.cancel();
       subscription = DatabaseService()
           .streamUser(userId)
-          .listen((UserData user) => dispatch(UserUpdated(user)));
+          .listen((UserData user) => add(UserUpdated(user)));
     }
     if (event is UserUpdated) {
       yield UpdateUser(event.userData);
@@ -33,8 +33,8 @@ class CurrentUserBloc extends Bloc<CurrentUserEvent, CurrentUserState> {
   }
 
   @override
-  void dispose() {
+  void close() {
     subscription.cancel();
-    super.dispose();
+    super.close();
   }
 }

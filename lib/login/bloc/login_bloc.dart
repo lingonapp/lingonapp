@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:lingon/auth/userrepository.dart';
 import 'package:meta/meta.dart';
@@ -55,18 +56,18 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Stream<LoginState> _mapEmailChangedToState(String email) async* {
     try {
       Validate.isEmail(email);
-      yield currentState.update(
+      yield state.update(
         isEmailValid: true,
       );
     } catch (e) {
-      yield currentState.update(
+      yield state.update(
         isEmailValid: false,
       );
     }
   }
 
   Stream<LoginState> _mapPasswordChangedToState(String password) async* {
-    yield currentState.update(
+    yield state.update(
       isPasswordValid: password.length > 5,
     );
   }

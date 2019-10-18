@@ -35,7 +35,7 @@ packages:
       name: bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.15.0"
+    version: "0.16.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -236,7 +236,7 @@ packages:
       name: flutter_bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.21.0"
+    version: "0.22.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -290,7 +290,7 @@ packages:
       name: google_maps_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.21+7"
+    version: "0.5.21+8"
   google_sign_in:
     dependency: "direct main"
     description:
@@ -472,7 +472,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.0"
+    version: "3.1.0+1"
   pub_semver:
     dependency: transitive
     description:

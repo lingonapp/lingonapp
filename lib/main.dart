@@ -44,7 +44,7 @@ class _MainState extends State<Main> {
   void initState() {
     super.initState();
     _authenticationBloc = AuthenticationBloc(userRepository: _userRepository);
-    _authenticationBloc.dispatch(AppStarted());
+    _authenticationBloc.add(AppStarted());
   }
 
   @override
@@ -85,7 +85,7 @@ class _MainState extends State<Main> {
 
   @override
   void dispose() {
-    _authenticationBloc.dispose();
+    _authenticationBloc.close();
     super.dispose();
   }
 }

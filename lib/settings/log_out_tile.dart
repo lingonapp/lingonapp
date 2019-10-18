@@ -11,7 +11,7 @@ class LogOutTile extends StatelessWidget {
         leading: Icon(Icons.exit_to_app),
         title: const Text('Sign out'),
         onTap: () {
-          BlocProvider.of<AuthenticationBloc>(context).dispatch(
+          BlocProvider.of<AuthenticationBloc>(context).add(
             LoggedOut(),
           );
         },

@@ -52,18 +52,18 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   Stream<RegisterState> _mapEmailChangedToState(String email) async* {
     try {
       Validate.isEmail(email);
-      yield currentState.update(
+      yield state.update(
         isEmailValid: true,
       );
     } catch (e) {
-      yield currentState.update(
+      yield state.update(
         isEmailValid: false,
       );
     }
   }
 
   Stream<RegisterState> _mapPasswordChangedToState(String password) async* {
-    yield currentState.update(
+    yield state.update(
       isPasswordValid: password.length > 6,
     );
   }

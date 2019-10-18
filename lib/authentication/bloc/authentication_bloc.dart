@@ -49,7 +49,7 @@ class AuthenticationBloc
     if (await _userRepository.isEmailVerified()) {
       yield Authenticated(await _userRepository.getUserEmail());
     } else {
-      dispatch(UnverifiedEvent());
+      add(UnverifiedEvent());
     }
   }
 

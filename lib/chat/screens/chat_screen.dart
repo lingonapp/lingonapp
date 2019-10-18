@@ -26,7 +26,7 @@ class _ChatScreenState extends State<ChatScreen> {
       builder: (BuildContext context, ChatState chatState) {
         print(chatState);
         if (chatState == InitialChatState()) {
-          BlocProvider.of<ChatBloc>(context).dispatch(ListenForChats());
+          BlocProvider.of<ChatBloc>(context).add(ListenForChats());
           return LoadingScreen(
             loadingText: 'Loading chats',
           );

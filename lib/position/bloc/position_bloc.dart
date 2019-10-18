@@ -32,17 +32,17 @@ class PositionBloc extends Bloc<PositionEvent, PositionState> {
       Position lastKnownDeviceLocation =
           await geolocator.getLastKnownPosition();
       if (lastKnownDeviceLocation != null) {
-        dispatch(UpdatePosition(position: lastKnownDeviceLocation));
+        add(UpdatePosition(position: lastKnownDeviceLocation));
       } else {
         var headQuarters = LatLng(59.3347524, 18.0965903);
-        dispatch(UpdatePosition(
+        add(UpdatePosition(
             position: Position(
                 latitude: headQuarters.latitude,
                 longitude: headQuarters.longitude)));
       }
       positionStream = geolocator.getPositionStream(locationOptions);
       subscription = positionStream.listen(
-          (Position position) => dispatch(UpdatePosition(position: position)));
+          (Position position) => add(UpdatePosition(position: position)));
     }
     if (event is UpdatePosition) {
       final Position position = event.position;
@@ -76,8 +76,8 @@ class PositionBloc extends Bloc<PositionEvent, PositionState> {
   }
 
   @override
-  void dispose() {
+  void close() {
     subscription.cancel();
-    super.dispose();
+    super.close();
   }
 }

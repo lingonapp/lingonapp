@@ -41,7 +41,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
-    _registerBloc.dispose();
+    _registerBloc.close();
     super.dispose();
   }
 }

@@ -34,7 +34,7 @@ class MapState extends State<MapPage> {
         final String userId = state.userData.id;
         final PositionBloc positionBloc =
             BlocProvider.of<PositionBloc>(context);
-        positionBloc.dispatch(ListenForPosition(currentUserId: userId));
+        positionBloc.add(ListenForPosition(currentUserId: userId));
         return BlocBuilder<PositionBloc, PositionState>(
             builder: (BuildContext context, PositionState postionState) {
           Position userPosition = postionState.currentPosition;

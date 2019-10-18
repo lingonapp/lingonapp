@@ -45,13 +45,13 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
             }
           });
           print(users.length);
-          dispatch(SetUsers(users: users));
+          add(SetUsers(users: users));
         });
       }
       ;
     }
 
-    positionBlocStream = positionBloc.state.listen(onData);
+    positionBlocStream = positionBloc.listen(onData);
   }
 
   @override
@@ -67,9 +67,9 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
   }
 
   @override
-  void dispose() {
+  void close() {
     positionBlocStream?.cancel();
     nearbyUsersStream?.cancel();
-    super.dispose();
+    super.close();
   }
 }

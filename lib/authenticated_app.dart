@@ -24,7 +24,7 @@ class AuthenticatedApp extends StatelessWidget {
     final CurrentUserBloc _currentUserBloc =
         CurrentUserBloc(userRepository: _userRepository);
     final ChatBloc _chatBloc = ChatBloc(_userRepository);
-    _currentUserBloc.dispatch(InitializeCurrentUser());
+    _currentUserBloc.add(InitializeCurrentUser());
     return MultiBlocProvider(
       providers: [
         BlocProvider<CurrentUserBloc>(
@@ -46,7 +46,7 @@ class AuthenticatedApp extends StatelessWidget {
           if (userState == InitialCurrentUserState()) {
             return LoadingScreen();
           }
-          _chatBloc.dispatch(ListenForChats());
+          _chatBloc.add(ListenForChats());
           return AppTabs();
         },
       ),

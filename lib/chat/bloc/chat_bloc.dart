@@ -23,7 +23,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ) async* {
     if (event is ListenForChats) {
       void onChatsUpdate(Chats chats) {
-        dispatch(UpdateChats(chats: chats));
+        add(UpdateChats(chats: chats));
       }
 
       await subscription?.cancel();
