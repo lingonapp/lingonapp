@@ -8,12 +8,8 @@ abstract class ChatEvent extends Equatable {
 }
 
 class ListenForChats extends ChatEvent {
-  ListenForChats({@required this.currentUserId})
-      : super(<String>[currentUserId]);
-  final String currentUserId;
-
   @override
-  List<Object> get props => [currentUserId];
+  List<Object> get props => null;
 }
 
 class UpdateChats extends ChatEvent {

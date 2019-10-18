@@ -17,13 +17,13 @@ class AuthenticatedApp extends StatelessWidget {
 
   final UserRepository _userRepository;
   final PositionBloc _positionBloc = PositionBloc();
-  final ChatBloc _chatBloc = ChatBloc();
 
   @override
   Widget build(BuildContext context) {
     final UsersBloc _usersBloc = UsersBloc(_positionBloc);
     final CurrentUserBloc _currentUserBloc =
         CurrentUserBloc(userRepository: _userRepository);
+    final ChatBloc _chatBloc = ChatBloc(_userRepository);
     _currentUserBloc.dispatch(InitializeCurrentUser());
     return MultiBlocProvider(
       providers: [
@@ -46,8 +46,7 @@ class AuthenticatedApp extends StatelessWidget {
           if (userState == InitialCurrentUserState()) {
             return LoadingScreen();
           }
-          _chatBloc
-              .dispatch(ListenForChats(currentUserId: userState.userData.id));
+          _chatBloc.dispatch(ListenForChats());
           return AppTabs();
         },
       ),

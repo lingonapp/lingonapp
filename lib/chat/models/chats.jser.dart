@@ -14,6 +14,7 @@ abstract class _$ChatsJsonSerializer implements Serializer<Chats> {
   Map<String, dynamic> toMap(Chats model) {
     if (model == null) return null;
     Map<String, dynamic> ret = <String, dynamic>{};
+    setMapValue(ret, 'length', model.length);
     setMapValue(
         ret,
         'chats',

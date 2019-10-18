@@ -7,13 +7,19 @@ class ChatJsonSerializer extends Serializer<Chat> with _$ChatJsonSerializer {}
 
 class Chat {
   Chat({
-    this.id,
     this.latestMessage,
     this.userIds,
     this.userNames,
   });
 
-  String id;
+  String _id;
+
+  String get id => _id;
+
+  set id(String id) {
+    _id = id;
+  }
+
   LatestMessage latestMessage;
   List userIds;
   List userNames;
@@ -26,7 +32,7 @@ class LatestMessageJsonSerializer extends Serializer<LatestMessage>
 class LatestMessage {
   LatestMessage({this.from, this.text});
 
-  // Timestamp createdAt;
+  DateTime createdAt;
   MessageAuthor from;
   String text;
 }

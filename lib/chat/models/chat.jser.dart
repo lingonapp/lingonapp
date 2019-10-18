@@ -48,6 +48,8 @@ abstract class _$LatestMessageJsonSerializer
   Map<String, dynamic> toMap(LatestMessage model) {
     if (model == null) return null;
     Map<String, dynamic> ret = <String, dynamic>{};
+    setMapValue(
+        ret, 'createdAt', dateTimeUtcProcessor.serialize(model.createdAt));
     setMapValue(ret, 'from', _messageAuthorJsonSerializer.toMap(model.from));
     setMapValue(ret, 'text', model.text);
     return ret;
@@ -57,6 +59,8 @@ abstract class _$LatestMessageJsonSerializer
   LatestMessage fromMap(Map map) {
     if (map == null) return null;
     final obj = LatestMessage();
+    obj.createdAt =
+        dateTimeUtcProcessor.deserialize(map['createdAt'] as String);
     obj.from = _messageAuthorJsonSerializer.fromMap(map['from'] as Map);
     obj.text = map['text'] as String;
     return obj;
