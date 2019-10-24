@@ -42,7 +42,8 @@ class MessageAuthorJsonSerializer extends Serializer<MessageAuthor>
     with _$MessageAuthorJsonSerializer {}
 
 class MessageAuthor {
-  MessageAuthor({this.name});
+  MessageAuthor({this.name, this.id});
 
   String name;
+  String id;
 }

@@ -48,6 +48,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         chat.id = chatSnap.documentID;
         return chat;
       }).toList();
+      print(userId);
       return Chats(chats: map);
     });
   }

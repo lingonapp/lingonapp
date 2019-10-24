@@ -10,6 +10,7 @@ class ChatMessageRepository {
         .collection('chat')
         .document(chatId)
         .collection('messages')
+        .orderBy('timeStamp', descending: true)
         .limit(20)
         .snapshots()
         .map((QuerySnapshot snap) {
@@ -21,5 +22,13 @@ class ChatMessageRepository {
       print(chatId);
       return map;
     });
+  }
+
+  void sendTextChatMessage({String chatId, ChatTextMessage message}) {
+    DocumentReference chatDocRef =
+        _firestore.collection('chat').document(chatId);
+    CollectionReference messagesCollection = chatDocRef.collection('messages');
+    Map<String, dynamic> x = ChatTextMessageJsonSerializer().toMap(message);
+    messagesCollection.add(x);
   }
 }

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:lingon/chatmessages/screens/chat_messages.dart';
+import 'package:lingon/chat/screens/chat_screen.dart';
 
 import 'models/chat.dart';
 
 class SelectChatItem extends StatefulWidget {
   SelectChatItem({Key key, this.chat}) : super(key: key);
   final Chat chat;
+
   @override
   _SelectChatItemState createState() => _SelectChatItemState();
 }
@@ -23,10 +24,13 @@ class _SelectChatItemState extends State<SelectChatItem> {
       isThreeLine: true,
       subtitle: Text(chat.latestMessage.text),
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ChatMessages(chatId: chat.id)));
+        // ChatMessages(chatId: chat.id)
+        // Show a new page within the same tree so that provider is reachable
+        String chatId = chat.id;
+        Navigator.pushNamed(context, '/chat/$chatId',
+            arguments: ScreenArguments(
+              chatId,
+            ));
       },
     );
   }

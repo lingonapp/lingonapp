@@ -74,6 +74,7 @@ abstract class _$MessageAuthorJsonSerializer
     if (model == null) return null;
     Map<String, dynamic> ret = <String, dynamic>{};
     setMapValue(ret, 'name', model.name);
+    setMapValue(ret, 'id', model.id);
     return ret;
   }
 
@@ -82,6 +83,7 @@ abstract class _$MessageAuthorJsonSerializer
     if (map == null) return null;
     final obj = MessageAuthor();
     obj.name = map['name'] as String;
+    obj.id = map['id'] as String;
     return obj;
   }
 }

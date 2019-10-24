@@ -13,4 +13,5 @@ class Chats {
   List<Chat> chats;
 
   int get length => chats.length;
+  bool get isEmpty => chats.isEmpty;
 }

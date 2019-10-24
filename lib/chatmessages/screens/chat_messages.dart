@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingon/chatmessages/bloc/bloc.dart';
 import 'package:lingon/chatmessages/chat_message.dart';
+import 'package:lingon/currentuser/bloc/bloc.dart';
 import 'package:lingon/loading/screens/loading_screen.dart';
 
 class ChatMessages extends StatefulWidget {
@@ -14,29 +15,61 @@ class ChatMessages extends StatefulWidget {
 
 class _ChatMessagesState extends State<ChatMessages> {
   // List<ChatMessages> _messages;
+  final TextEditingController textEditingController = TextEditingController();
+  ChatMessagesBloc chatMessagesBloc;
+
+  @override
+  void initState() {
+    chatMessagesBloc = BlocProvider.of<ChatMessagesBloc>(context);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    ChatMessagesBloc _chatMessagesBloc = ChatMessagesBloc(widget.chatId);
-    return BlocProvider<ChatMessagesBloc>(
-      builder: (BuildContext context) => _chatMessagesBloc,
-      child: BlocBuilder<ChatMessagesBloc, ChatMessagesState>(
-          builder: (BuildContext context, ChatMessagesState state) {
-        if (state is InitialChatMessagesState) {
-          _chatMessagesBloc.dispatch(FetchMessagesEvent());
-        }
-        return Scaffold(
-          appBar: AppBar(
-            title: Text("chatmessages"),
+    return BlocBuilder<ChatMessagesBloc, ChatMessagesState>(
+        builder: (BuildContext context, ChatMessagesState state) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text("chatmessages"),
+        ),
+        body: Container(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: ChatMessagesListScreen(widget.chatId),
+              ),
+              Container(
+                padding: EdgeInsets.all(10.0),
+                child: TextField(
+                  onSubmitted: (_) => sendMessage(context),
+                  controller: textEditingController,
+                  decoration: InputDecoration(
+                      border: InputBorder.none, hintText: 'Type a message...'),
+                ),
+              )
+            ],
           ),
-          body: ChatMessagesListScreen(),
-        );
-      }),
-    );
+        ),
+      );
+    });
+  }
+
+  void sendMessage(context) {
+    if (textEditingController.text.isEmpty) {
+      return;
+    }
+    ;
+    chatMessagesBloc
+        .add(SendTextMessageEvent(textEditingController.text, widget.chatId));
+    textEditingController.clear();
   }
 }
 
 class ChatMessagesListScreen extends StatefulWidget {
+  ChatMessagesListScreen(this.chatId);
+
+  final String chatId;
+
   @override
   _ChatMessagesListScreenState createState() => _ChatMessagesListScreenState();
 }
@@ -62,19 +95,41 @@ class _ChatMessagesListScreenState extends State<ChatMessagesListScreen> {
     return BlocBuilder<ChatMessagesBloc, ChatMessagesState>(
         builder: (BuildContext context, ChatMessagesState state) {
       if (state is InitialChatMessagesState) {
+        BlocProvider.of<ChatMessagesBloc>(context)
+            .add(FetchMessagesEvent(widget.chatId));
+
         return LoadingScreen(loadingText: "Loading chat messages");
       }
       if (state is ChatMessagesFetched) {
-        print('Got initial messages');
         messages = state.messages;
       }
-      print(messages.length);
+      CurrentUserBloc _currentUserBloc =
+          BlocProvider.of<CurrentUserBloc>(context);
       return ListView.builder(
         padding: EdgeInsets.all(10.0),
+        shrinkWrap: true,
         itemBuilder: (context, index) {
           ChatMessage message = messages[index];
           if (message is ChatTextMessage) {
-            return Text(message.text + " from: " + message.from.name);
+            bool isYourMessage =
+                _currentUserBloc.state.userData.id == message.from.id;
+            return Row(
+              mainAxisAlignment: isYourMessage
+                  ? MainAxisAlignment.end
+                  : MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16.0),
+                    color: isYourMessage
+                        ? Theme.of(context).primaryColor
+                        : Colors.grey.withAlpha(20),
+                  ),
+                  child: Text(message.text),
+                ),
+              ],
+            );
           }
           return Text("hej");
         },

@@ -4,6 +4,8 @@ import 'package:lingon/chatmessages/chat_message.dart';
 abstract class ChatMessagesEvent extends Equatable {}
 
 class FetchMessagesEvent extends ChatMessagesEvent {
+  FetchMessagesEvent(this.chatId);
+  final String chatId;
   @override
   List<Object> get props => null;
 }
@@ -17,8 +19,9 @@ class ReceivedMessagesEvent extends ChatMessagesEvent {
 }
 
 class SendTextMessageEvent extends ChatMessagesEvent {
-  SendTextMessageEvent(this.text);
+  SendTextMessageEvent(this.text, this.chatId);
   final String text;
+  final String chatId;
   @override
-  List<Object> get props => [text];
+  List<Object> get props => [text, chatId];
 }
