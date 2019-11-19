@@ -33,8 +33,8 @@ class CurrentUserBloc extends Bloc<CurrentUserEvent, CurrentUserState> {
   }
 
   @override
-  void close() {
+  Future<void> close() {
     subscription.cancel();
-    super.close();
+    return super.close();
   }
 }

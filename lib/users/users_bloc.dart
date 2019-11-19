@@ -67,9 +67,9 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
   }
 
   @override
-  void close() {
+  Future<void> close() {
     positionBlocStream?.cancel();
     nearbyUsersStream?.cancel();
-    super.close();
+    return super.close();
   }
 }
