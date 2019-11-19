@@ -175,7 +175,7 @@ packages:
       name: equatable
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.1"
+    version: "1.0.0"
   firebase_analytics:
     dependency: "direct main"
     description:
@@ -210,7 +210,7 @@ packages:
       name: firebase_messaging
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.1.6"
+    version: "5.1.8"
   firebase_performance:
     dependency: "direct main"
     description:
@@ -269,7 +269,7 @@ packages:
       name: geolocator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.1.4+1"
+    version: "5.1.5"
   glob:
     dependency: transitive
     description:
@@ -290,7 +290,7 @@ packages:
       name: google_maps_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.21+8"
+    version: "0.5.21+11"
   google_sign_in:
     dependency: "direct main"
     description:
