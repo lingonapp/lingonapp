@@ -15,23 +15,26 @@ class _SelectChatItemState extends State<SelectChatItem> {
   @override
   Widget build(BuildContext context) {
     Chat chat = widget.chat;
-    return ListTile(
-      leading: Icon(Icons.chat),
-      title: Text(
-        chat.userNames.join(", "),
-        style: TextStyle(fontWeight: FontWeight.bold),
+    return Card(
+      elevation: 4,
+      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      child: ListTile(
+        leading: Icon(Icons.chat),
+        title: Text(
+          chat.userNames.join(", "),
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(chat.latestMessage.text),
+        onTap: () {
+          // ChatMessages(chatId: chat.id)
+          // Show a new page within the same tree so that provider is reachable
+          String chatId = chat.id;
+          Navigator.pushNamed(context, '/chat/$chatId',
+              arguments: ScreenArguments(
+                chatId,
+              ));
+        },
       ),
-      isThreeLine: true,
-      subtitle: Text(chat.latestMessage.text),
-      onTap: () {
-        // ChatMessages(chatId: chat.id)
-        // Show a new page within the same tree so that provider is reachable
-        String chatId = chat.id;
-        Navigator.pushNamed(context, '/chat/$chatId',
-            arguments: ScreenArguments(
-              chatId,
-            ));
-      },
     );
   }
 }

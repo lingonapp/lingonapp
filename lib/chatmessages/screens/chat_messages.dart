@@ -17,10 +17,12 @@ class _ChatMessagesState extends State<ChatMessages> {
   // List<ChatMessages> _messages;
   final TextEditingController textEditingController = TextEditingController();
   ChatMessagesBloc chatMessagesBloc;
+  FocusNode myFocusNode;
 
   @override
   void initState() {
     chatMessagesBloc = BlocProvider.of<ChatMessagesBloc>(context);
+    myFocusNode = FocusNode();
     super.initState();
   }
 
@@ -36,15 +38,25 @@ class _ChatMessagesState extends State<ChatMessages> {
           child: Column(
             children: <Widget>[
               Expanded(
-                child: ChatMessagesListScreen(widget.chatId),
+                child: GestureDetector(
+                    onTap: () => FocusScope.of(context).unfocus(),
+                    child: ChatMessagesListScreen(widget.chatId)),
               ),
               Container(
                 padding: EdgeInsets.all(10.0),
                 child: TextField(
-                  onSubmitted: (_) => sendMessage(context),
+                  focusNode: myFocusNode,
+                  onSubmitted: (_) {
+                    sendMessage(context);
+                    FocusScope.of(context).requestFocus(myFocusNode);
+                  },
                   controller: textEditingController,
                   decoration: InputDecoration(
-                      border: InputBorder.none, hintText: 'Type a message...'),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              width: 16.0, color: Colors.pink.shade50),
+                          borderRadius: BorderRadius.circular(4)),
+                      hintText: 'Type a message...'),
                 ),
               )
             ],
@@ -97,7 +109,6 @@ class _ChatMessagesListScreenState extends State<ChatMessagesListScreen> {
       if (state is InitialChatMessagesState) {
         BlocProvider.of<ChatMessagesBloc>(context)
             .add(FetchMessagesEvent(widget.chatId));
-
         return LoadingScreen(loadingText: "Loading chat messages");
       }
       if (state is ChatMessagesFetched) {
@@ -119,7 +130,8 @@ class _ChatMessagesListScreenState extends State<ChatMessagesListScreen> {
                   : MainAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  padding: EdgeInsets.all(10.0),
+                  margin: EdgeInsets.symmetric(vertical: 4),
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16.0),
                     color: isYourMessage
