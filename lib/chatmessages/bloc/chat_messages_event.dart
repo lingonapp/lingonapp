@@ -25,3 +25,11 @@ class SendTextMessageEvent extends ChatMessagesEvent {
   @override
   List<Object> get props => [text, chatId];
 }
+
+class FetchPreviousMessagesEvent extends ChatMessagesEvent {
+  FetchPreviousMessagesEvent({ this.chatId, this.latestMessageId });
+  final String chatId;
+  final String latestMessageId;
+  @override
+  List<Object> get props => [chatId, latestMessageId];
+}

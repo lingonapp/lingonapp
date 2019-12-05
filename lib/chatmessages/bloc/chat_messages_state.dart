@@ -13,10 +13,16 @@ class InitialChatMessagesState extends ChatMessagesState {
   List<Object> get props => null;
 }
 
+class FetchingChatMessage extends ChatMessagesState {
+  @override
+  List<Object> get props => null;
+}
+
 class ChatMessagesFetched extends ChatMessagesState {
   final List<ChatMessage> messages;
-  ChatMessagesFetched(this.messages) : super(messages);
+  final bool isInitialFetch;
+  ChatMessagesFetched({ this.messages, this.isInitialFetch}) : super(messages);
 
   @override
-  List<Object> get props => [messages];
+  List<Object> get props => [messages, isInitialFetch];
 }

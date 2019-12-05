@@ -97,6 +97,8 @@ class _ChatMessagesListScreenState extends State<ChatMessagesListScreen> {
       double maxScroll = listScrollController.position.maxScrollExtent;
       double currentScroll = listScrollController.position.pixels;
       if (maxScroll == currentScroll) {
+        BlocProvider.of<ChatMessagesBloc>(context)
+            .add(FetchPreviousMessagesEvent(chatId: widget.chatId, latestMessageId: messages.last.id));
         print('Fetch more chats?!?!?');
       }
     });
@@ -111,8 +113,15 @@ class _ChatMessagesListScreenState extends State<ChatMessagesListScreen> {
             .add(FetchMessagesEvent(widget.chatId));
         return LoadingScreen(loadingText: "Loading chat messages");
       }
+      if (state is FetchingChatMessage) {
+        return LoadingScreen(loadingText: "Loading more messages");
+      }
       if (state is ChatMessagesFetched) {
-        messages = state.messages;
+        if (state.isInitialFetch) {
+          messages = state.messages;
+        } else {
+          messages.addAll(state.messages);
+        }
       }
       CurrentUserBloc _currentUserBloc =
           BlocProvider.of<CurrentUserBloc>(context);

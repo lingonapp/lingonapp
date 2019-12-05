@@ -30,11 +30,12 @@ class ChatMessagesBloc extends Bloc<ChatMessagesEvent, ChatMessagesState> {
         add(ReceivedMessagesEvent(chatMessages));
       }
 
+      yield FetchingChatMessage();
       messageSubscriptions[chatId] =
           _chatMessageRepository.streamChatMessages(chatId).listen(onData);
     }
     if (event is ReceivedMessagesEvent) {
-      yield ChatMessagesFetched(event.messages);
+      yield ChatMessagesFetched(messages: event.messages, isInitialFetch: true);
     }
     if (event is SendTextMessageEvent) {
       String now = DateTime.now().toIso8601String();
@@ -43,6 +44,14 @@ class ChatMessagesBloc extends Bloc<ChatMessagesEvent, ChatMessagesState> {
       ChatMessage message = ChatTextMessage(now, from, event.text);
       _chatMessageRepository.sendTextChatMessage(
           chatId: event.chatId, message: message);
+    }
+    if (event is FetchPreviousMessagesEvent) {
+      // yield FetchingChatMessage();
+      print(event.chatId);
+      List<ChatMessage> previousMessages = await _chatMessageRepository
+          .getPreviousMessages(event.chatId, event.latestMessageId);
+      yield ChatMessagesFetched(
+          messages: previousMessages, isInitialFetch: false);
     }
   }
 }

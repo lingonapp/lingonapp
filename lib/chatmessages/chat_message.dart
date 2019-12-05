@@ -10,6 +10,13 @@ abstract class ChatMessage extends Equatable {
   final String timeStamp;
   final ChatMessageType type;
   final MessageAuthor from;
+
+  String _id;
+  Object get id => _id;
+
+  set id(String id) {
+    _id = id;
+  }
 }
 
 @GenSerializer(
