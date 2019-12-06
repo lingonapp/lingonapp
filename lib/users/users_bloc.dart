@@ -38,6 +38,10 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
               Map data = element.data;
               GeoPoint point = data['position']['geopoint'];
               String userName = data['name'];
+              if (userName == null) {
+                return;
+              }
+              print('username $userName');
               users.add(Marker(
                   infoWindow: InfoWindow(title: userName, snippet: '*'),
                   markerId: MarkerId(userName),

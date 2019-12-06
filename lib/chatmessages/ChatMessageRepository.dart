@@ -42,7 +42,7 @@ class ChatMessageRepository {
     DocumentSnapshot prevDocument;
     prevDocument = await messagesCollection
         .document(prevMessageId)
-        .get(); // gets a reference to the last message in the existing list
+        ?.get(); // gets a reference to the last message in the existing list
     final querySnapshot = await messagesCollection
         .startAfterDocument(
             prevDocument) // Start reading documents after the specified document
@@ -50,8 +50,11 @@ class ChatMessageRepository {
         .limit(20) // limit the read to 20 items
         .getDocuments();
     List<ChatTextMessage> messageList = List();
-    querySnapshot.documents.forEach((doc) =>
-        messageList.add(ChatTextMessageJsonSerializer().fromMap(doc.data)));
+    querySnapshot.documents.forEach((doc) {
+      ChatTextMessage chatMessage = ChatTextMessageJsonSerializer().fromMap(doc.data);
+      chatMessage.id = doc.documentID;
+      messageList.add(chatMessage);
+    });
     return messageList;
   }
 }
