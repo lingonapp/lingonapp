@@ -28,16 +28,16 @@ class AuthenticatedApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<CurrentUserBloc>(
-          builder: (BuildContext context) => _currentUserBloc,
+          create: (BuildContext context) => _currentUserBloc,
         ),
         BlocProvider<PositionBloc>(
-          builder: (BuildContext context) => _positionBloc,
+          create: (BuildContext context) => _positionBloc,
         ),
         BlocProvider<UsersBloc>(
-          builder: (BuildContext context) => _usersBloc,
+          create: (BuildContext context) => _usersBloc,
         ),
         BlocProvider<ChatBloc>(
-          builder: (BuildContext context) => _chatBloc,
+          create: (BuildContext context) => _chatBloc,
         )
       ],
       child: BlocBuilder<CurrentUserBloc, CurrentUserState>(

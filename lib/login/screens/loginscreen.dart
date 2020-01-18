@@ -34,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(title: Text('Login')),
       body: BlocProvider<LoginBloc>(
-        builder: (BuildContext context) => _loginBloc,
+        create: (BuildContext context) => _loginBloc,
         child: LoginForm(userRepository: _userRepository),
       ),
     );

@@ -24,12 +24,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     Stream<LoginEvent> events,
     Stream<LoginState> Function(LoginEvent event) next,
   ) {
-    final Observable<LoginEvent> observableStream = events;
-    final Observable<LoginEvent> nonDebounceStream =
+    final Stream<LoginEvent> observableStream = events;
+    final Stream<LoginEvent> nonDebounceStream =
         observableStream.where((event) {
       return event is! EmailChanged && event is! PasswordChanged;
     });
-    final Observable<LoginEvent> debounceStream =
+    final Stream<LoginEvent> debounceStream =
         observableStream.where((LoginEvent event) {
       return event is EmailChanged || event is PasswordChanged;
     }).debounceTime(const Duration(milliseconds: 300));
@@ -76,7 +76,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       await _userRepository.signInWithGoogle();
       yield LoginState.success();
-    } catch (_) {
+    } catch (error) {
+      print(error);
       yield LoginState.failure();
     }
   }

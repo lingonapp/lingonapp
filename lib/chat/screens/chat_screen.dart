@@ -42,7 +42,7 @@ class _ChatScreenState extends State<ChatScreen> {
         }
         print(chatState.chats);
         return BlocProvider<ChatMessagesBloc>(
-          builder: (BuildContext context) => _chatMessagesBloc,
+            create: (BuildContext context) => _chatMessagesBloc,
           child: Navigator(
             key: _chatNavigatorKey,
             onGenerateRoute: (RouteSettings settings) {

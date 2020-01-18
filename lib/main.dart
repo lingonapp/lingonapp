@@ -53,7 +53,7 @@ class _MainState extends State<Main> {
         FirebasePerformance.instance.newTrace("Splash screen");
     splashTrace.start();
     return BlocProvider<AuthenticationBloc>(
-      builder: (BuildContext context) => _authenticationBloc,
+      create: (BuildContext context) => _authenticationBloc,
       child: MaterialApp(
         title: 'Lingon',
         theme: lingonTheme,
