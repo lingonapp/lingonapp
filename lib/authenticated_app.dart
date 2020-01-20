@@ -4,8 +4,8 @@ import 'package:lingon/auth/userrepository.dart';
 import 'package:lingon/chat/bloc/bloc.dart';
 import 'package:lingon/users/users_bloc.dart';
 
-import 'app_tabs.dart';
 import 'currentuser/bloc/bloc.dart';
+import 'features/map/presentation/pages/map.dart';
 import 'loading/screens/loading_screen.dart';
 import 'position/bloc/bloc.dart';
 
@@ -20,9 +20,10 @@ class AuthenticatedApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final UsersBloc _usersBloc = UsersBloc(_positionBloc);
+
     final CurrentUserBloc _currentUserBloc =
         CurrentUserBloc(userRepository: _userRepository);
+    final UsersBloc _usersBloc = UsersBloc(_positionBloc, _currentUserBloc);
     final ChatBloc _chatBloc = ChatBloc(_userRepository);
     _currentUserBloc.add(InitializeCurrentUser());
     return MultiBlocProvider(
@@ -47,7 +48,7 @@ class AuthenticatedApp extends StatelessWidget {
             return LoadingScreen();
           }
           _chatBloc.add(ListenForChats());
-          return AppTabs();
+          return MapPage();
         },
       ),
     );

@@ -46,7 +46,6 @@ class _ChatScreenState extends State<ChatScreen> {
           child: Navigator(
             key: _chatNavigatorKey,
             onGenerateRoute: (RouteSettings settings) {
-              print(settings.name);
               ScreenArguments args = settings.arguments;
               String chatID = args?.chatId;
               if (chatID != null) {

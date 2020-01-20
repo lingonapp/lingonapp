@@ -20,8 +20,17 @@ class DatabaseService {
         .setData(emptyUser.serialize());
   }
 
-  Future<void> setInNeed({String userId, bool isInNeed}) async {
-    final Map<String, dynamic> dataMap = <String, bool>{'isInNeed': isInNeed};
+  Future<void> setInNeed(
+      {String userId, bool isInNeed, String userName}) async {
+    final Map<String, dynamic> dataMap = <String, dynamic>{
+      'isInNeed': isInNeed,
+      'name': userName
+    };
+    // TODO: Should not update two tables and should use cloud functions instead
+    await _db
+        .collection('locations')
+        .document(userId)
+        .setData(dataMap, merge: true);
     return _db.collection('users').document(userId).updateData(dataMap);
   }
 
