@@ -37,7 +37,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   Stream<Chats> streamChats(String userId) {
     return _firestore
-        .collection('chat')
+        .collection('chats')
         .where('userIds', arrayContains: userId)
         .limit(20)
         .snapshots()

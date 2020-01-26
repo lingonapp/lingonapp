@@ -42,7 +42,7 @@ class _ChatScreenState extends State<ChatScreen> {
         }
         print(chatState.chats);
         return BlocProvider<ChatMessagesBloc>(
-            create: (BuildContext context) => _chatMessagesBloc,
+          create: (BuildContext context) => _chatMessagesBloc,
           child: Navigator(
             key: _chatNavigatorKey,
             onGenerateRoute: (RouteSettings settings) {
@@ -58,23 +58,62 @@ class _ChatScreenState extends State<ChatScreen> {
               }
               if (chatState.chats.isEmpty) {
                 return MaterialPageRoute(
-                    builder: (context) => Center(
-                          child: Text("No chats"),
+                    builder: (context) => SafeArea(
+                          top: true,
+                          bottom: true,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  "Chat",
+                                  textScaleFactor: 3,
+                                  textAlign: TextAlign.left,
+                                ),
+                                Expanded(
+                                  child: Center(
+                                    child: Text("No chats"),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ));
               }
               return MaterialPageRoute(
-                  builder: (context) => ListView.builder(
-                        itemBuilder: (BuildContext context, int index) {
-                          Chat chat = chatState.chats.chats[index];
-                          print(index);
-                          return index >= chatState.chats.length
-                              ? Center(
-                                  child: Text("More chats?"),
-                                )
-                              : SelectChatItem(chat: chat);
-                        },
-                        itemCount: chatState.chats.length,
-                        controller: _scrollController,
+                  builder: (context) => SafeArea(
+                        top: true,
+                        bottom: true,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                "Chat",
+                                textScaleFactor: 3,
+                                textAlign: TextAlign.left,
+                              ),
+                              Expanded(
+                                child: ListView.builder(
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    Chat chat = chatState.chats.chats[index];
+                                    print(index);
+                                    return index >= chatState.chats.length
+                                        ? Center(
+                                            child: Text("More chats?"),
+                                          )
+                                        : SelectChatItem(chat: chat);
+                                  },
+                                  itemCount: chatState.chats.length,
+                                  controller: _scrollController,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ));
             },
           ),

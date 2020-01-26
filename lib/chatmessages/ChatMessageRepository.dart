@@ -7,7 +7,7 @@ class ChatMessageRepository {
 
   Stream<List<ChatMessage>> streamChatMessages(String chatId) {
     return _firestore
-        .collection('chat')
+        .collection('chats')
         .document(chatId)
         .collection('messages')
         .orderBy('timeStamp', descending: true)
@@ -28,7 +28,7 @@ class ChatMessageRepository {
 
   void sendTextChatMessage({String chatId, ChatTextMessage message}) {
     DocumentReference chatDocRef =
-        _firestore.collection('chat').document(chatId);
+        _firestore.collection('chats').document(chatId);
     CollectionReference messagesCollection = chatDocRef.collection('messages');
     Map<String, dynamic> x = ChatTextMessageJsonSerializer().toMap(message);
     messagesCollection.add(x);
@@ -37,7 +37,7 @@ class ChatMessageRepository {
   Future<List<ChatTextMessage>> getPreviousMessages(
       String chatId, String prevMessageId) async {
     DocumentReference chatDocRef =
-        _firestore.collection('chat').document(chatId);
+        _firestore.collection('chats').document(chatId);
     CollectionReference messagesCollection = chatDocRef.collection('messages');
     DocumentSnapshot prevDocument;
     prevDocument = await messagesCollection
