@@ -21,10 +21,10 @@ class _SelectChatItemState extends State<SelectChatItem> {
       child: ListTile(
         leading: Icon(Icons.chat),
         title: Text(
-          chat.userNames.join(", "),
+          "Chat names here",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        subtitle: Text(chat.latestMessage.text),
+        subtitle: Text(chat?.latestMessage?.text ?? ''),
         onTap: () {
           // ChatMessages(chatId: chat.id)
           // Show a new page within the same tree so that provider is reachable

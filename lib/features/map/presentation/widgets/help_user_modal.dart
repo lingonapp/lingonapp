@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:lingon/chat/chat_repository.dart';
 import 'package:lingon/users/HelpableUser.dart';
 
 class HelpUserModal extends StatelessWidget {
-  HelpUserModal(this.userToHelp);
+  HelpUserModal(this.userToHelp, this.currentUserId);
   final HelpableUser userToHelp;
+  final String currentUserId;
   @override
   Widget build(BuildContext context) {
     var userToHelp = this.userToHelp;
@@ -37,6 +39,7 @@ class HelpUserModal extends StatelessWidget {
           child: Text('Help now!'),
           onPressed: () {
             print('Start chat with $userToHelp');
+            ChatRepository().startChat([userToHelp.userId], currentUserId);
           },
         )
       ],

@@ -71,7 +71,7 @@ class MapState extends State<MapPage> {
                     .map((helpableUser) => Marker(
                           markerId: MarkerId(helpableUser.userId),
                           position: helpableUser.position,
-                          onTap: () => _showHelpUserModal(helpableUser),
+                          onTap: () => _showHelpUserModal(helpableUser, userId),
                         ))
                     .toSet();
               } catch (e) {
@@ -162,9 +162,7 @@ class MapState extends State<MapPage> {
           child: Container(
               decoration: BoxDecoration(
                   border: Border.all(width: 15.0, color: Colors.transparent),
-                  borderRadius:
-                  //TODO: Initiate chat here
-                  const BorderRadius.all(Radius.circular(15)),
+                  borderRadius: BorderRadius.all(Radius.circular(15)),
                   color: Color.fromRGBO(255, 255, 255, 0.95)),
               child: widget),
         );
@@ -174,8 +172,8 @@ class MapState extends State<MapPage> {
     });
   }
 
-  void _showHelpUserModal(HelpableUser userToHelp) {
-    _showModal(HelpUserModal(userToHelp));
+  void _showHelpUserModal(HelpableUser userToHelp, String currentUserId) {
+    _showModal(HelpUserModal(userToHelp, currentUserId));
   }
 
   Future<void> _requestHelp({UserData userData, bool isInNeed}) async {
