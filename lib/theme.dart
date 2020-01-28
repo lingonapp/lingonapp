@@ -22,6 +22,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 final ThemeData lingonTheme = ThemeData(
     brightness: Brightness.light,
@@ -30,7 +31,12 @@ final ThemeData lingonTheme = ThemeData(
     primaryColor: LingonColors.pink[400],
     primaryColorBrightness: Brightness.light,
     accentColor: LingonColors.green[200],
-    accentColorBrightness: Brightness.light);
+    textTheme: GoogleFonts.nunitoTextTheme().copyWith(
+      body1: GoogleFonts.rubik(),
+      body2: GoogleFonts.rubik(),
+    ),
+    accentColorBrightness: Brightness.light
+);
 
 class LingonColors {
   LingonColors._(); // this basically makes it so you can instantiate this class

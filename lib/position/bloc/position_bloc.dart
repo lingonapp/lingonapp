@@ -62,8 +62,14 @@ class PositionBloc extends Bloc<PositionEvent, PositionState> {
       final GeoFirePoint myLocation =
           geo.point(latitude: position.latitude, longitude: position.longitude);
       final Map<String, dynamic> dataMap = <String, dynamic>{
-        'active': true,
-        'position': myLocation.data,
+        'isInNeed': false,
+        'position': {
+          'geohash': myLocation.hash,
+          'geopoint': {
+            'latitude': position.latitude,
+            'longitude': position.longitude,
+          }
+        },
       };
       await _firestore
           .collection('locations')

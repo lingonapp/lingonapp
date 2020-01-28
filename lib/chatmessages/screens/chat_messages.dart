@@ -34,32 +34,35 @@ class _ChatMessagesState extends State<ChatMessages> {
         appBar: AppBar(
           title: Text("chatmessages"),
         ),
-        body: Container(
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: GestureDetector(
-                    onTap: () => FocusScope.of(context).unfocus(),
-                    child: ChatMessagesListScreen(widget.chatId)),
-              ),
-              Container(
-                padding: EdgeInsets.all(10.0),
-                child: TextField(
-                  focusNode: myFocusNode,
-                  onSubmitted: (_) {
-                    sendMessage(context);
-                    FocusScope.of(context).requestFocus(myFocusNode);
-                  },
-                  controller: textEditingController,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              width: 16.0, color: Colors.pink.shade50),
-                          borderRadius: BorderRadius.circular(4)),
-                      hintText: 'Type a message...'),
+        body: SafeArea(
+          bottom: true,
+          child: Container(
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: GestureDetector(
+                      onTap: () => FocusScope.of(context).unfocus(),
+                      child: ChatMessagesListScreen(widget.chatId)),
                 ),
-              )
-            ],
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: TextField(
+                    focusNode: myFocusNode,
+                    onSubmitted: (_) {
+                      sendMessage(context);
+                      FocusScope.of(context).requestFocus(myFocusNode);
+                    },
+                    controller: textEditingController,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                width: 16.0, color: Colors.pink.shade50),
+                            borderRadius: BorderRadius.circular(4)),
+                        hintText: 'Type a message...'),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       );

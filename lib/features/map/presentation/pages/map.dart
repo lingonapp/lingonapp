@@ -80,65 +80,67 @@ class MapState extends State<MapPage> {
               return Scaffold(
                 body: PageView(controller: pageController, children: [
                   SettingsScreen(),
-                  Stack(children: [
-                    GoogleMap(
-                      gestureRecognizers:
-                          <Factory<OneSequenceGestureRecognizer>>[
-                        Factory<OneSequenceGestureRecognizer>(
-                          () => EagerGestureRecognizer(),
-                        ),
-                      ].toSet(),
-                      mapType: MapType.hybrid,
-                      initialCameraPosition: initialPosition,
-                      myLocationEnabled: true,
-                      myLocationButtonEnabled: isInNeed,
-                      onMapCreated: (GoogleMapController controller) {
-                        _controller.complete(controller);
+                  Scaffold(
+                    floatingActionButtonLocation:
+                    FloatingActionButtonLocation.centerFloat,
+                    floatingActionButton: FloatingActionButton.extended(
+                      onPressed: () {
+                        _requestHelp(userData: state.userData, isInNeed: !isInNeed);
                       },
-                      markers: _markers,
-                      circles: _circles,
+                      label: isInNeed
+                          ? const Text('Disable')
+                          : const Text('Request help'),
+                      icon: isInNeed ? Icon(Icons.close) : Icon(Icons.check),
                     ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 60, right: 20),
-                      alignment: Alignment.topRight,
-                      child: FloatingActionButton(
-                        backgroundColor: Colors.white,
-                        onPressed: () {
-                          // Swipe right
-                          pageController.animateToPage(2,
-                              duration: Duration(milliseconds: 500),
-                              curve: Curves.ease);
+                    body: Stack(children: [
+                      GoogleMap(
+                        gestureRecognizers:
+                            <Factory<OneSequenceGestureRecognizer>>[
+                          Factory<OneSequenceGestureRecognizer>(
+                            () => EagerGestureRecognizer(),
+                          ),
+                        ].toSet(),
+                        mapType: MapType.hybrid,
+                        initialCameraPosition: initialPosition,
+                        myLocationEnabled: true,
+                        myLocationButtonEnabled: isInNeed,
+                        onMapCreated: (GoogleMapController controller) {
+                          _controller.complete(controller);
                         },
-                        child: Icon(Icons.chat),
+                        markers: _markers,
+                        circles: _circles,
                       ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 60, left: 20),
-                      alignment: Alignment.topLeft,
-                      child: FloatingActionButton(
-                        backgroundColor: Colors.white,
-                        onPressed: () {
-                          pageController.animateToPage(0,
-                              duration: Duration(milliseconds: 500),
-                              curve: Curves.ease);
-                        },
-                        child: Icon(Icons.settings),
+                      Container(
+                        margin: const EdgeInsets.only(top: 60, right: 20),
+                        alignment: Alignment.topRight,
+                        child: FloatingActionButton(
+                          backgroundColor: Colors.white,
+                          onPressed: () {
+                            // Swipe right
+                            pageController.animateToPage(2,
+                                duration: Duration(milliseconds: 500),
+                                curve: Curves.ease);
+                          },
+                          child: Icon(Icons.chat),
+                        ),
                       ),
-                    ),
-                  ]),
+                      Container(
+                        margin: const EdgeInsets.only(top: 60, left: 20),
+                        alignment: Alignment.topLeft,
+                        child: FloatingActionButton(
+                          backgroundColor: Colors.white,
+                          onPressed: () {
+                            pageController.animateToPage(0,
+                                duration: Duration(milliseconds: 500),
+                                curve: Curves.ease);
+                          },
+                          child: Icon(Icons.settings),
+                        ),
+                      ),
+                    ]),
+                  ),
                   ChatScreen(),
                 ]),
-                floatingActionButtonLocation:
-                    FloatingActionButtonLocation.centerFloat,
-                floatingActionButton: FloatingActionButton.extended(
-                  onPressed: () {
-                    _requestHelp(userData: state.userData, isInNeed: !isInNeed);
-                  },
-                  label: isInNeed
-                      ? const Text('Disable')
-                      : const Text('Request help'),
-                  icon: isInNeed ? Icon(Icons.close) : Icon(Icons.check),
-                ),
               );
             },
           );
