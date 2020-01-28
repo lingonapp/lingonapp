@@ -2,13 +2,15 @@ import 'package:equatable/equatable.dart';
 import 'package:lingon/chatmessages/chat_message.dart';
 
 class ChatMessagesState extends Equatable {
-  ChatMessagesState([List props = const <dynamic>[]]) : super();
+  final Map<String, List<ChatMessage>> messages = Map();
+  ChatMessagesState() : super();
 
   @override
   List<Object> get props => [props];
 }
 
 class InitialChatMessagesState extends ChatMessagesState {
+  final Map<String, List<ChatMessage>> messages = Map();
   @override
   List<Object> get props => null;
 }
@@ -19,10 +21,25 @@ class FetchingChatMessage extends ChatMessagesState {
 }
 
 class ChatMessagesFetched extends ChatMessagesState {
-  final List<ChatMessage> messages;
+  final Map<String, List<ChatMessage>> messages;
   final bool isInitialFetch;
-  ChatMessagesFetched({ this.messages, this.isInitialFetch}) : super(messages);
+  ChatMessagesFetched({ this.messages, this.isInitialFetch}) : super();
 
   @override
   List<Object> get props => [messages, isInitialFetch];
+}
+
+class ChatMessageSending extends ChatMessagesState {
+  @override
+  List<Object> get props => null;
+}
+
+class ChatMessagesEnd extends ChatMessagesState {
+  @override
+  List<Object> get props => null;
+}
+
+class FetchingPreviousChatMessage extends ChatMessagesState {
+  @override
+  List<Object> get props => null;
 }

@@ -11,8 +11,9 @@ class FetchMessagesEvent extends ChatMessagesEvent {
 }
 
 class ReceivedMessagesEvent extends ChatMessagesEvent {
-  ReceivedMessagesEvent(this.messages);
+  ReceivedMessagesEvent(this.messages, this.chatId);
   final List<ChatMessage> messages;
+  final String chatId;
 
   @override
   List<Object> get props => [messages];

@@ -20,8 +20,6 @@ class ChatMessageRepository {
         chat.id = chatSnap.documentID;
         return chat;
       }).toList();
-      print('chatid');
-      print(chatId);
       return map;
     });
   }
@@ -32,6 +30,13 @@ class ChatMessageRepository {
     CollectionReference messagesCollection = chatDocRef.collection('messages');
     Map<String, dynamic> x = ChatTextMessageJsonSerializer().toMap(message);
     messagesCollection.add(x);
+  }
+
+  Future<bool> hasChatMessages(String chatId) async {
+    CollectionReference chatDocRef =
+    _firestore.collection('chats').document(chatId).collection('messages');
+    var messages = await chatDocRef.getDocuments();
+    return messages.documents.isNotEmpty;
   }
 
   Future<List<ChatTextMessage>> getPreviousMessages(

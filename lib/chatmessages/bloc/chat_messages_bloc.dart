@@ -27,17 +27,30 @@ class ChatMessagesBloc extends Bloc<ChatMessagesEvent, ChatMessagesState> {
       print('Get messages for $chatId');
       await messageSubscriptions[chatId]?.cancel();
       void onData(List<ChatMessage> chatMessages) {
-        add(ReceivedMessagesEvent(chatMessages));
+        add(ReceivedMessagesEvent(chatMessages, chatId));
       }
 
       yield FetchingChatMessage();
+      bool hasMessages = await _chatMessageRepository.hasChatMessages(chatId);
+      if (!hasMessages) {
+        yield ChatMessagesEnd();
+      }
       messageSubscriptions[chatId] =
           _chatMessageRepository.streamChatMessages(chatId).listen(onData);
     }
     if (event is ReceivedMessagesEvent) {
-      yield ChatMessagesFetched(messages: event.messages, isInitialFetch: true);
+      final Map<String, List<ChatMessage>> messages = state.messages;
+      if (messages[event.chatId] == null) {
+        messages[event.chatId] = event.messages;
+      } else {
+        messages[event.chatId].addAll(event.messages);
+      }
+      print(messages);
+      print('asd');
+      yield ChatMessagesFetched(messages: messages, isInitialFetch: true);
     }
     if (event is SendTextMessageEvent) {
+      yield ChatMessageSending();
       String now = DateTime.now().toIso8601String();
       MessageAuthor from =
           MessageAuthor(name: currentUserData.name, id: currentUserData.id);
@@ -46,12 +59,24 @@ class ChatMessagesBloc extends Bloc<ChatMessagesEvent, ChatMessagesState> {
           chatId: event.chatId, message: message);
     }
     if (event is FetchPreviousMessagesEvent) {
-      // yield FetchingChatMessage();
-      print(event.chatId);
+      if (state is ChatMessagesEnd) {
+        print('Cant fetch more since you are at the end');
+        return;
+      }
+      yield FetchingPreviousChatMessage();
       List<ChatMessage> previousMessages = await _chatMessageRepository
           .getPreviousMessages(event.chatId, event.latestMessageId);
+      final Map<String, List<ChatMessage>> messages = state.messages;
+      if (messages[event.chatId] == null) {
+        messages[event.chatId] = previousMessages;
+      } else {
+        messages[event.chatId].addAll(previousMessages);
+      }
       yield ChatMessagesFetched(
-          messages: previousMessages, isInitialFetch: false);
+          messages: state.messages, isInitialFetch: false);
+      if (previousMessages.length < 20) { // 20 = limit on fetch more, should be constant or remote config?
+        yield ChatMessagesEnd();
+      }
     }
   }
 }
