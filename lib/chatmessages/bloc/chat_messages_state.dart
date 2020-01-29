@@ -35,8 +35,9 @@ class ChatMessageSending extends ChatMessagesState {
 }
 
 class ChatMessagesEnd extends ChatMessagesState {
-  @override
-  List<Object> get props => null;
+  final Map<String, List<ChatMessage>> messages;
+  final bool isInitialFetch;
+  ChatMessagesEnd({ this.messages, this.isInitialFetch}) : super();
 }
 
 class FetchingPreviousChatMessage extends ChatMessagesState {

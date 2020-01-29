@@ -102,8 +102,7 @@ class _ChatMessagesListScreenState extends State<ChatMessagesListScreen> {
       if (maxScroll == currentScroll) {
         BlocProvider.of<ChatMessagesBloc>(context).add(
             FetchPreviousMessagesEvent(
-                chatId: widget.chatId,
-                latestMessageId: messages.last.id));
+                chatId: widget.chatId, latestMessageId: messages.last.id));
         print('Fetch more chats?!?!?');
       }
     });
@@ -113,21 +112,26 @@ class _ChatMessagesListScreenState extends State<ChatMessagesListScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<ChatMessagesBloc, ChatMessagesState>(
         builder: (BuildContext context, ChatMessagesState state) {
-      if (state is InitialChatMessagesState) {
+      if (state is FetchingChatMessage) {
+        return LoadingScreen(loadingText: "Loading more messages");
+      }
+      if (state is InitialChatMessagesState ||
+          state.messages[widget.chatId] == null) {
         BlocProvider.of<ChatMessagesBloc>(context)
             .add(FetchMessagesEvent(widget.chatId));
         return LoadingScreen(loadingText: "Loading chat messages");
       }
-      if (state is FetchingChatMessage) {
-        return LoadingScreen(loadingText: "Loading more messages");
-      }
       if (state is ChatMessagesFetched) {
-        if (state.isInitialFetch) {
+        if (state.messages[widget.chatId]?.isNotEmpty ?? false) {
           messages = state.messages[widget.chatId];
-        } else {
-          messages.addAll(state.messages[widget.chatId]);
         }
       }
+      if (state is ChatMessagesEnd) {
+        if (state.messages[widget.chatId]?.isNotEmpty ?? false) {
+          messages = state.messages[widget.chatId];
+        }
+      }
+
       if (state is FetchingPreviousChatMessage) {
         // return Text("Loading more");
       }
@@ -138,7 +142,6 @@ class _ChatMessagesListScreenState extends State<ChatMessagesListScreen> {
         shrinkWrap: true,
         itemBuilder: (context, index) {
           ChatMessage message = messages[index];
-          print(message);
           if (message is ChatTextMessage) {
             bool isYourMessage =
                 _currentUserBloc.state.userData.id == message.from.id;

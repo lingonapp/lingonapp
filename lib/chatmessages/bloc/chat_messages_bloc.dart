@@ -63,7 +63,6 @@ class ChatMessagesBloc extends Bloc<ChatMessagesEvent, ChatMessagesState> {
         print('Cant fetch more since you are at the end');
         return;
       }
-      yield FetchingPreviousChatMessage();
       List<ChatMessage> previousMessages = await _chatMessageRepository
           .getPreviousMessages(event.chatId, event.latestMessageId);
       final Map<String, List<ChatMessage>> messages = state.messages;
@@ -72,10 +71,13 @@ class ChatMessagesBloc extends Bloc<ChatMessagesEvent, ChatMessagesState> {
       } else {
         messages[event.chatId].addAll(previousMessages);
       }
-      yield ChatMessagesFetched(
-          messages: state.messages, isInitialFetch: false);
       if (previousMessages.length < 20) { // 20 = limit on fetch more, should be constant or remote config?
-        yield ChatMessagesEnd();
+        yield ChatMessagesEnd(
+            messages: messages, isInitialFetch: false
+        );
+      } else {
+        yield ChatMessagesFetched(
+            messages: messages, isInitialFetch: false);
       }
     }
   }
